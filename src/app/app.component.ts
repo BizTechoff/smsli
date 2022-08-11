@@ -101,4 +101,9 @@ export class AppComponent implements OnInit {
     if (this.dialogService.isScreenSmall())
       this.sidenav.close();
   }
+
+  openSite(url: string) {
+    window.open(url, '_blank')
+  }
+  
 }

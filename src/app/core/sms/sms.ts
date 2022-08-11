@@ -7,9 +7,6 @@ import { ByName } from "./byName";
 })
 export class Sms extends IdEntity {
 
-    @Fields.string({ caption: '' })
-    message = ''
-
     @Fields.dateOnly({ caption: 'תאריך' })
     date!: Date
 
@@ -18,6 +15,9 @@ export class Sms extends IdEntity {
     time!: string
 
     @Field(() => ByName)
-    byName!: ByName
+    byName = ByName.fname
+
+    @Fields.string({ caption: '' })
+    text = ''
 
 }

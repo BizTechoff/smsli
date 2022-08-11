@@ -1,16 +1,18 @@
+import jwt from 'jsonwebtoken';
 import { BackendMethod, Controller, ControllerBase, Fields, UserInfo, Validators } from "remult";
 import { terms } from "../terms";
 import { Roles } from "./roles";
 import { User } from "./user";
-import jwt from 'jsonwebtoken';
 
 @Controller('signIn')
 export class SignInController extends ControllerBase {
+
     @Fields.string({
         caption: terms.username,
         validate: Validators.required
     })
     user = '';
+
     @Fields.string({
         caption: terms.password,
         validate: Validators.required,
@@ -21,7 +23,7 @@ export class SignInController extends ControllerBase {
     @Fields.boolean({
         caption: terms.rememberOnThisDevice,
     })
-    rememberOnThisDevice = false;
+    rememberOnThisDevice = true;
 
     @BackendMethod({ allowed: true })
     async signIn() {
@@ -59,8 +61,8 @@ export class SignInController extends ControllerBase {
         }
         throw new Error(terms.invalidSignIn);
     }
-    }
-    
+}
+
 export function getJwtSecret() {
     if (process.env['NODE_ENV'] === "production")
         return process.env['TOKEN_SIGN_KEY']!;

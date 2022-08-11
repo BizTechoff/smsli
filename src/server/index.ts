@@ -10,7 +10,7 @@ import { api } from './api';
 import './send-sms';
 
 config(); //loads the configuration from the .env file
-
+ 
 async function startup() {
     const app = express();
     app.use(sslRedirect());
@@ -24,12 +24,12 @@ async function startup() {
 
     app.use(api);
     app.use('/api/docs', swaggerUi.serve,
-        swaggerUi.setup(api.openApiDoc({ title: 'remult-react-todo' })));
+        swaggerUi.setup(api.openApiDoc({ title: 'smsli-todo' })));
 
-    app.use(express.static('dist/angular-starter-project'));
+    app.use(express.static('dist/smsli'));
     app.use('/*', async (req, res) => {
         try {
-            res.sendFile(process.cwd() + '/dist/angular-starter-project/index.html');
+            res.sendFile(process.cwd() + '/dist/smsli/index.html');
         } catch (err) {
             res.sendStatus(500);
         }

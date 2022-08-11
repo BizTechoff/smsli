@@ -1,4 +1,4 @@
-<div style="display: flex; flex-direction: column; justify-content: center; margin: 10%; padding: 10%;">
+<div style="display: flex; flex-direction: column; justify-content: center; margin: 5%; padding: 5%;">
   <div style="display: flex; flex-direction: row; justify-content: space-between; height: auto; width: 100%;">
   </div>
   <div style="display: flex; flex-direction: row; justify-content: space-between; height: 100%; width: 100%;">
@@ -11,18 +11,18 @@
         <mat-label>הוסף לקוח</mat-label>
         <mat-icon>person</mat-icon>
       </button>
-    </div>
+    </div> 
     <div style="display: flex; flex-direction: column; justify-content: space-between; height: 100%; width: 100%;">
       <div style="display: flex; flex-direction: row; justify-content: space-between; height: 100%; width: 100%;">
         <data-control [field]="this.sms.$.date"></data-control>
         <data-control [field]="this.sms.$.time"></data-control>
       </div>
       <data-control [field]="this.sms.$.byName"></data-control>
-      <textarea rows="10" [(ngModel)]="this.sms.$.message.value"></textarea>
+      <textarea rows="10" [(ngModel)]="this.sms.text"></textarea>
       <table>
+        <th style="width: 25%">סלולרי</th>
         <th style="width: 25%">שם פרטי</th>
         <th style="width: 25%">שם משפחה</th>
-        <th style="width: 25%">סלולרי</th>
         <th style="width: 25%">הערה</th>
         <tr *ngFor="let m of this.mobiles">
           <td style="width: 25%"> {{ m.number }} </td>

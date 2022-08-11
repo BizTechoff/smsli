@@ -50,21 +50,31 @@ export class HomeComponent implements OnInit {
   }
 
   async send() {
+    console.log(0)
     await this.sms.save()
+    console.log(1)
     for (const m of this.mobiles) {
       let sm = this.remult.repo(SmsMobile).create()
       sm.sms = this.sms
       sm.mobile = m
       sm.status = SendStatus.sending
       await sm.save()
+      console.log(2)
       let sent = await NotificationService.SendSms({
-        message: this.sms.message,
+        message: this.sms.text.replace(
+          '!name!',
+          this.sms.byName.isFname()
+            ? m.fname 
+            : this.sms.byName.isLname()
+              ? m.lname
+              : m.fname + ' ' + m.lname),
         mobile: m.number,
         uid: this.remult.user.id//,
         // schedule
       })
+      console.log(3, JSON.stringify(sent))
 
-      if (sent) {
+      if (sent && sent.success) {
         sm.status = SendStatus.sent
         await sm.save()
         this.dialog.info('נשלח בהצלחה');
