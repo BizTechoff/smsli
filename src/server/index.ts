@@ -32,7 +32,7 @@ async function startup() {
             res.sendFile(process.cwd() + '/dist/smsli/index.html');
         } catch (err) {
             res.sendStatus(500);
-        }
+        } 
     });
     let port = process.env['PORT'] || 3002;
     app.listen(port);
