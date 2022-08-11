@@ -60,14 +60,18 @@ export class HomeComponent implements OnInit {
       sm.status = SendStatus.sending
       await sm.save()
       console.log(2)
-      let sent = await NotificationService.SendSms({
-        message: this.sms.text.replace(
+      let msg = this.sms.text
+      if (msg.includes('!name!')) {
+        msg = msg.replace(
           '!name!',
           this.sms.byName.isFname()
-            ? m.fname 
+            ? m.fname
             : this.sms.byName.isLname()
               ? m.lname
-              : m.fname + ' ' + m.lname),
+              : m.fname + ' ' + m.lname)
+      }
+      let sent = await NotificationService.SendSms({
+        message: msg,
         mobile: m.number,
         uid: this.remult.user.id//,
         // schedule

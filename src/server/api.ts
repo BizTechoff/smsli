@@ -8,6 +8,7 @@ import { Sms } from '../app/core/sms/sms';
 import { SignInController } from '../app/users/SignInController';
 import { UpdatePasswordController } from '../app/users/UpdatePasswordController';
 import { User } from '../app/users/user';
+import './send-sms';
 config()
 export const api = remultExpress({
     entities: [User, Mobile, Sms, SmsMobile, NotificationService],
