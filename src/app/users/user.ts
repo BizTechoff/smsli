@@ -1,6 +1,6 @@
-import { IdEntity, Entity, Validators, isBackend, Allow, Fields, BackendMethod, Remult } from "remult";
-import { Roles } from './roles';
+import { Allow, BackendMethod, Entity, Fields, IdEntity, isBackend, Validators } from "remult";
 import { terms } from "../terms";
+import { Roles } from './roles';
 
 @Entity<User>("Users", {
     allowApiRead: Allow.authenticated,
@@ -20,13 +20,16 @@ import { terms } from "../terms";
     }
 )
 export class User extends IdEntity {
+
     @Fields.string({
         validate: [Validators.required, Validators.uniqueOnBackend],
         caption: terms.username
     })
     name = '';
+
     @Fields.string({ includeInApi: false })
     password = '';
+
     @Fields.date({
         allowApiUpdate: false
     })
@@ -41,12 +44,15 @@ export class User extends IdEntity {
     async hashAndSetPassword(password: string) {
         this.password = (await import('password-hash')).generate(password);
     }
+
     async passwordMatches(password: string) {
         return !this.password || (await import('password-hash')).verify(password, this.password);
     }
+
     @BackendMethod({ allowed: Roles.admin })
     async resetPassword() {
         this.password = '';
         await this.save();
     }
+
 }

@@ -1,3 +1,42 @@
-<p>
-  home works!
-</p>
+<div style="display: flex; flex-direction: column; justify-content: center; margin: 10%; padding: 10%;">
+  <div style="display: flex; flex-direction: row; justify-content: space-between; height: auto; width: 100%;">
+  </div>
+  <div style="display: flex; flex-direction: row; justify-content: space-between; height: 100%; width: 100%;">
+    <div style="display: flex; flex-direction: column; justify-content: space-between; height: 100%; width: 100%;">
+      <button color="accent" mat-raised-button (click)="this.addMobilesFromExcel()">
+        <mat-label>הוסף אקסל</mat-label>
+        <mat-icon>receipt_long</mat-icon>
+      </button>
+      <button color="accent" mat-raised-button (click)="this.addMobile()">
+        <mat-label>הוסף לקוח</mat-label>
+        <mat-icon>person</mat-icon>
+      </button>
+    </div>
+    <div style="display: flex; flex-direction: column; justify-content: space-between; height: 100%; width: 100%;">
+      <div style="display: flex; flex-direction: row; justify-content: space-between; height: 100%; width: 100%;">
+        <data-control [field]="this.sms.$.date"></data-control>
+        <data-control [field]="this.sms.$.time"></data-control>
+      </div>
+      <data-control [field]="this.sms.$.byName"></data-control>
+      <textarea rows="10" [(ngModel)]="this.sms.$.message.value"></textarea>
+      <table>
+        <th style="width: 25%">שם פרטי</th>
+        <th style="width: 25%">שם משפחה</th>
+        <th style="width: 25%">סלולרי</th>
+        <th style="width: 25%">הערה</th>
+        <tr *ngFor="let m of this.mobiles">
+          <td style="width: 25%"> {{ m.number }} </td>
+          <td style="width: 25%"> {{ m.fname }} </td>
+          <td style="width: 25%"> {{ m.lname }} </td>
+          <td style="width: 25%"> {{ m.remark }} </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <div style="display: flex; flex-direction: row; justify-content: space-between;">
+    <button color="accent" mat-raised-button (click)="this.send()">
+      <mat-label>שלח</mat-label>
+      <mat-icon>send</mat-icon>
+    </button>
+  </div>
+</div>

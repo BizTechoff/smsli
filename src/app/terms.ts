@@ -15,7 +15,7 @@ export const terms = {
     ok: 'Ok',
     areYouSureYouWouldLikeToDelete: "Are you sure you would like to delete",
     cancel: 'Cancel',
-    home: 'Home',
+    home: 'Sms',
     userAccounts: 'User Accounts',
     invalidSignIn: "Invalid Sign In Info",
     signOut: 'Sign Out',

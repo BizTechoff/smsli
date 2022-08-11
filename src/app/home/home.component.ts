@@ -1,4 +1,13 @@
 import { Component, OnInit } from '@angular/core';
+import { openDialog } from '@remult/angular';
+import { Remult } from 'remult';
+import { DialogService } from '../common/dialog';
+import { InputAreaComponent } from '../common/input-area/input-area.component';
+import { NotificationService } from '../common/notificationService';
+import { Mobile } from '../core/mobile/mobile';
+import { SendStatus } from '../core/sendStatus';
+import { SmsMobile } from '../core/sms-mobile';
+import { Sms } from '../core/sms/sms';
 
 @Component({
   selector: 'app-home',
@@ -7,9 +16,66 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HomeComponent implements OnInit {
 
-  constructor() { }
+  sms = this.remult.repo(Sms).create()
+  mobiles = [] as Mobile[]
 
-  ngOnInit() {
+  constructor(private remult: Remult, private dialog: DialogService) { }
+
+  async ngOnInit() {
+    await this.refresh()
   }
-}
 
+  async refresh() {
+    this.mobiles = await this.remult.repo(Mobile).find()
+  }
+
+  async addMobilesFromExcel() {
+
+  }
+
+  async addMobile() {
+    let mobile = this.remult.repo(Mobile).create()
+    let changed = await openDialog(InputAreaComponent,
+      dlg => dlg.args = {
+        title: 'הוסף לקוח',
+        fields: () => [
+          mobile.$.number,
+          mobile.$.fname,
+          mobile.$.lname],
+        ok: async () => {
+          await mobile.save()
+          await this.refresh()
+        }
+      })
+  }
+
+  async send() {
+    await this.sms.save()
+    for (const m of this.mobiles) {
+      let sm = this.remult.repo(SmsMobile).create()
+      sm.sms = this.sms
+      sm.mobile = m
+      sm.status = SendStatus.sending
+      await sm.save()
+      let sent = await NotificationService.SendSms({
+        message: this.sms.message,
+        mobile: m.number,
+        uid: this.remult.user.id//,
+        // schedule
+      })
+
+      if (sent) {
+        sm.status = SendStatus.sent
+        await sm.save()
+        this.dialog.info('נשלח בהצלחה');
+      }
+      else {
+        sm.status = SendStatus.error
+        await sm.save()
+        this.dialog.info('שליחה נכשלה');
+      }
+    }
+  }
+
+
+}
