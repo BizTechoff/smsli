@@ -4,7 +4,7 @@ This project is a starter project for using remult & angular that already has a 
 
 To use in a new project:
 ```sh
-npx degit noam-honig/angular-starter-project.git my-project
+npx degit noam-honig/smsli.git my-project
 cd my-project
 npm i
 ```
@@ -15,7 +15,7 @@ npm run dev
 ```
 
 # Tutorial:
-See [Creating a Fullstack Angular Remult app for non web developer](https://github.com/noam-honig/angular-starter-project/wiki/Creating-a-Fullstack-Angular-Remult-app-for-non-web-developer)
+See [Creating a Fullstack Angular Remult app for non web developer](https://github.com/noam-honig/smsli/wiki/Creating-a-Fullstack-Angular-Remult-app-for-non-web-developer)
 
 
 # Create an Heroku site and deploy to it

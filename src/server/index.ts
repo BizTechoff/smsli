@@ -28,11 +28,11 @@ async function startup() {
 
     app.use(express.static('dist/smsli'));
     app.use('/*', async (req, res) => {
-        try {
+        try { 
             res.sendFile(process.cwd() + '/dist/smsli/index.html');
         } catch (err) {
             res.sendStatus(500);
-        } 
+        }
     });
     let port = process.env['PORT'] || 3002;
     app.listen(port);

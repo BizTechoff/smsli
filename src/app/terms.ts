@@ -1,5 +1,5 @@
 export const terms = {
-    appVersion: '2022.08.11.1',
+    appVersion: '2022.08.11.2',
     username: "User Name",
     signIn: "Sign In",
     confirmPassword: "Confirm Password",
