@@ -8,6 +8,11 @@
     </button>
     <span class="toolbar-title" [style]="remult.authenticated()?'':'text-align: center;'">{{currentTitle()}}</span>
     <ng-container *ngIf="!remult.authenticated()">
+      <div style="display:flex; justify-content:space-around;">
+        <a href="https://www.biztechoff.co.il/" target="_blank">
+          <img src="assets/logo.png" width="50px" title="סמס לי" />
+        </a>
+      </div>
       <!-- <button mat-flat-button color="primary" (click)="signIn()">{{terms.signIn}}</button> -->
     </ng-container>
     <ng-container *ngIf="remult.authenticated()">
@@ -20,19 +25,22 @@
     </ng-container>
   </mat-toolbar>
   <mat-sidenav-container class="app-sidenav-container">
-    <mat-sidenav #sidenav *ngIf="remult.authenticated()" class="app-sidenav mat-elevation-z10 no-print" [opened]="!dialogService.isScreenSmall()"
-      [mode]="dialogService.isScreenSmall()?'over':'side'">
-      <div style="width:100%;text-align: center">
-
+    <mat-sidenav #sidenav *ngIf="remult.authenticated()" class="app-sidenav mat-elevation-z10 no-print"
+      [opened]="!dialogService.isScreenSmall()" [mode]="dialogService.isScreenSmall()?'over':'side'">
+      
+      <div style="display:flex; justify-content: center; margin-top: 2%;">
+        <a href="https://www.biztechoff.co.il/" target="_blank">
+          <img src="assets/logo.png" width="100px" title="סמס לי" />
+        </a>
       </div>
+
       <h4 *ngIf="remult.authenticated()">{{terms.hello}} {{remult.user.name}}</h4>
       <mat-nav-list role="list">
         <ng-container *ngFor="let m of router.config">
           <mat-list-item *ngIf="shouldDisplayRoute(m)" routerLinkActive="active-route">
             <a matLine [routerLink]="m.path" (click)="routeClicked()">{{routeName(m)}}</a>
           </mat-list-item>
-
-
+          <mat-divider *ngIf="shouldDisplayRoute(m) && (m.path === terms.send)"></mat-divider>
         </ng-container>
       </mat-nav-list>
 
@@ -52,9 +60,10 @@
     <div style="display:flex; flex-direction: row; justify-content: space-between; align-items: center;">
       <div style="display:flex; flex-direction: row; justify-content: flex-end; align-items: center;">
         <div style="margin-right: 3px; align-items: center;">
-          <button title="רענן" (click)="this.refresh()" style="margin: 0; padding: 0; align-items: center; border: none; background-color: transparent;">
+          <button title="רענן" (click)="this.refresh()"
+            style="margin: 0; padding: 0; align-items: center; border: none; background-color: transparent;">
             <mat-icon color="" class="icon-display" [inline]="true">refresh</mat-icon>
-            </button>
+          </button>
           <mat-label title="רענון אחרון"> {{ this.date | date:'dd.MM.yyyy HH:mm' }} </mat-label>
         </div>
       </div>
