@@ -7,6 +7,8 @@ import { DialogService } from '../../../common/dialog';
 import { InputAreaComponent } from '../../../common/input-area/input-area.component';
 import { terms } from '../../../terms';
 import { Roles } from '../../../users/roles';
+import { GroupMobile } from '../../group-mobile';
+import { GroupsComponent } from '../../group/groups/groups.component';
 import { Mobile } from '../mobile';
 
 
@@ -78,36 +80,49 @@ export class MobilesComponent implements OnInit {
   }
 
   async upsertUser(id = '') {
-    let u: Mobile
+    let m: Mobile
     let title = ''
     if (id?.trim().length) {
       title = 'עדכון סלולרי'
-      u = await this.remult.repo(Mobile).findId(id, { useCache: false })
-      if (!u) {
+      m = await this.remult.repo(Mobile).findId(id, { useCache: false })
+      if (!m) {
         throw `Error user id: '${id}'`
       }
     }
     else {
       title = 'הוספת סלולרי'
-      u = this.remult.repo(Mobile).create()
+      m = this.remult.repo(Mobile).create()
       // u.avrech = true
     }
 
+    let isNew = false
     let changed = await openDialog(InputAreaComponent,
       dlg => dlg.args = {
         title: title,
         fields: () => [
 
           [
-            u.$.fname,
-            u.$.lname
+            m.$.fname,
+            m.$.lname
           ],
-          u.$.number,
-          u.$.remark,
-          u.$.enabled
+          m.$.number,
+          m.$.remark,
+          m.$.enabled
         ],
         ok: async () => {
-          await u.save()
+          // isNew = u.isNew()
+          await m.save()
+          let groups = await this.remult.repo(GroupMobile).find({
+            where: { mobile: { $id: m.id } }
+          })
+          if (groups) {
+            let changed2 = await openDialog(GroupsComponent,
+              win => win.args = { mid: m.id, multi: true },
+              win => win?.args.changed)
+            if (changed2) {
+              await this.refresh()
+            }
+          }
         }
       },
       dlg => dlg ? dlg.ok : false)

@@ -7,6 +7,8 @@ import { DialogService } from '../../../common/dialog';
 import { InputAreaComponent } from '../../../common/input-area/input-area.component';
 import { terms } from '../../../terms';
 import { Roles } from '../../../users/roles';
+import { GroupMobile } from '../../group-mobile';
+import { Mobile } from '../../mobile/mobile';
 import { Group } from '../group';
 
 
@@ -16,6 +18,15 @@ import { Group } from '../group';
   styleUrls: ['./groups.component.scss']
 })
 export class GroupsComponent implements OnInit {
+  // @Inject(MAT_DIALOG_DATA) public win: any
+
+
+  args: {
+    selected?: string[],
+    multi?: boolean,
+    changed?: boolean,
+    mid?: string
+  } = { selected: [] as string[], multi: false, changed: false, mid: '' }
   constructor(private dialog: DialogService, public remult: Remult) {
   }
   get $() { return getFields(this, this.remult) };
@@ -31,50 +42,109 @@ export class GroupsComponent implements OnInit {
     return this.remult.isAllowed(Roles.admin);
   }
 
-  smsim = new GridSettings(this.remult.repo(Group), {
-    allowDelete: true,
-    allowInsert: true,
-    allowUpdate: true,
-    numOfColumnsInGrid: 15,
+  smsim!: GridSettings<Group>
 
-    orderBy: { name: "asc" },
-    rowsInPage: 25,
-
-    columnSettings: row => [
-      { field: row.name, width: '300' }
-    ],
-    gridButtons: [
-      {
-        name: 'רענן',
-        icon: 'refresh',
-        click: async () => await this.refresh()
-      }
-    ],
-    rowButtons: [{
-      name: terms.resetPassword,
-      click: async () => {
-
-        // if (await this.dialog.yesNoQuestion(terms.passwordDeleteConfirmOf + " " + this.row.currentRow.name)) {
-        //   await this.smsim.currentRow.resetPassword();
-        //   this.dialog.info(terms.passwordDeletedSuccessful);
-        // };
-      }
-    }, {
-      name: terms.mobiles,
-      click: async () => {
-      }
+  async ngOnInit() {
+    console.log(11)
+    if (!this.args.selected) {
+      this.args.selected = [] as string[]
     }
-    ],
-    // confirmDelete: async (h) => {
-    //   return await this.dialog.confirmDelete(h.name)
-    // },
-  });
+    console.log(22)
+    this.intiGrid()
+    console.log(33)
+    if (this.smsim?.settings?.allowSelection) {
+      console.log(44)
+      this.smsim.selectedChanged = row => {
+        console.log(55)
+        console.log(JSON.stringify(row))
+        let selected = this.smsim.isSelected(row)
+        let i = this.args.selected!.indexOf(row.id)
+        let exists = i > -1
 
-  ngOnInit() {
+        if (selected) {
+          if (!exists) {
+            this.args.selected!.push(row.id)
+          }
+          else { }
+        }
+        else if (!selected) {
+          if (!exists) {
+            this.args.selected!.push(row.id)
+          }
+          else {
+            this.args.selected!.slice(i, 1)
+          }
+        }
+      }
+      console.log(99)
+
+      console.dir(this.args.selected)
+    }
+
+    for await (const g of this.remult.repo(GroupMobile).query({
+      where: { mobile: { $id: this.args.mid! } }
+    })) {
+      this.args.selected!.push(g.id)
+    }
+    console.dir(this.args.selected)
+  }
+
+  intiGrid() {
+    this.smsim = new GridSettings(this.remult.repo(Group))
+    // this.smsim = new GridSettings(this.remult.repo(Group), {
+    //   allowCrud: false,
+    //   numOfColumnsInGrid: 15,
+
+    //   orderBy: { name: "asc" },
+    //   rowsInPage: 25,
+    //   allowSelection: this.args.multi,
+
+    //   columnSettings: row => [
+    //     { field: row.name, width: '300' }
+    //   ],
+    //   gridButtons: [
+    //     {
+    //       name: 'רענן',
+    //       icon: 'refresh',
+    //       click: async () => await this.refresh()
+    //     }
+    //   ],
+    //   rowButtons: [{
+    //     name: terms.resetPassword,
+    //     click: async () => {
+
+    //       // if (await this.dialog.yesNoQuestion(terms.passwordDeleteConfirmOf + " " + this.row.currentRow.name)) {
+    //       //   await this.smsim.currentRow.resetPassword();
+    //       //   this.dialog.info(terms.passwordDeletedSuccessful);
+    //       // };
+    //     }
+    //   }, {
+    //     name: terms.mobiles,
+    //     click: async () => {
+    //     }
+    //   }
+    //   ],
+    //   // confirmDelete: async (h) => {
+    //   //   return await this.dialog.confirmDelete(h.name)
+    //   // },
+    // });
   }
 
   async refresh() {
     await this.smsim.reloadData()
+
+  }
+
+  async save() {
+    if (this.args.mid?.trim().length) {
+      for (const gid of this.args.selected!) {
+        let gm = this.remult.repo(GroupMobile).create()
+        gm.group = await this.remult.repo(Group).findId(gid)
+        gm.mobile = await this.remult.repo(Mobile).findId(this.args.mid!)
+        await gm.save()
+      }
+      // this.win?.close()
+    }
   }
 
   async upsertUser(id = '') {
@@ -106,6 +176,7 @@ export class GroupsComponent implements OnInit {
       dlg => dlg ? dlg.ok : false)
     if (changed) {
       // await u.save()
+      this.args.changed = true
       await this.refresh()
     }
   }

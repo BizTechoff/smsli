@@ -17,4 +17,12 @@
     <div class="grow-item">
     <data-grid [settings]="this.smsim"></data-grid>
     </div>
+    <div class="footer">
+      <div style="display: flex; flex-direction: row; justify-content: space-between; ">
+        <button *ngIf="this.args?.mid?.length" style="width: 100%;" mat-raised-button color='primary' (click)="save()">
+          <mat-icon>save</mat-icon>
+          <mat-label> {{ 'עדכן' }} </mat-label>
+        </button>
+      </div>
+    </div>
     </div>

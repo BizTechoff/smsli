@@ -27,6 +27,7 @@ import { SmsimComponent } from './core/sms/smsim/smsim.component';
 import { MobilesComponent } from './core/mobile/mobiles/mobiles.component';
 import { SendComponent } from './core/send/send/send.component';
 import { GroupsComponent } from './core/group/groups/groups.component';
+import { GroupsSelectorComponent } from './core/group/groups-selector/groups-selector.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { GroupsComponent } from './core/group/groups/groups.component';
     SmsimComponent,
     MobilesComponent,
     SendComponent,
-    GroupsComponent
+    GroupsComponent,
+    GroupsSelectorComponent
   ],
   imports: [
     BrowserModule,
