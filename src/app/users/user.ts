@@ -35,6 +35,11 @@ export class User extends IdEntity {
     })
     createDate = new Date();
 
+    @Fields.date({
+        allowApiUpdate: false
+    })
+    loginDate!: Date
+
     @Fields.boolean({
         allowApiUpdate: Roles.admin,
         caption: terms.admin

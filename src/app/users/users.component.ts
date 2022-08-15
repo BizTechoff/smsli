@@ -24,10 +24,10 @@ export class UsersComponent implements OnInit {
     allowDelete: true,
     allowInsert: true,
     allowUpdate: true,
-    numOfColumnsInGrid: 2,
+    numOfColumnsInGrid: 10,
 
     orderBy: { name: "asc" },
-    rowsInPage: 100,
+    rowsInPage: 25,
 
     columnSettings: users => [
       users.name,

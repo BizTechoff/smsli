@@ -1,4 +1,50 @@
 /* You can add global styles to this file, and also import other style files */
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+
+.full-page {
+    height: 100%;
+    display: flex;
+    flex-flow: column;
+}
+
+.grow-item {
+    height: 250px;
+    flex-grow: 1;
+    flex-shrink: 0;
+    overflow-y: auto;
+}
+
+.home-grow-item {
+    justify-content: center;
+    vertical-align: middle;
+    align-items: center;
+    height: calc(100%);
+    display: flex;
+    flex-grow: 1;
+    flex-shrink: 0;
+    flex-direction: row;
+    overflow-y: auto;
+    // background-color: green;
+    border: none;
+}
+
+.help-text {
+    background-color: lightyellow;
+    padding: 12px;
+    border-width: thin;
+    border-style: solid;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    border-color: lightgray;
+    text-align: center;
+}

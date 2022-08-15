@@ -13,6 +13,8 @@ export interface SendSmsResponse {
     count: number
 };
 
+// https://www.infobip.com/docs/api#channels/sms/send-sms-message
+
 NotificationService.sendSms = async (req: SmsRequest): Promise<{ success: boolean, message: string, count: number }> => {
     let result: SendSmsResponse = { success: false, message: 'Sms channel is close!', count: 0 };
 

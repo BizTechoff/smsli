@@ -48,16 +48,22 @@ export class SignInController extends ControllerBase {
                 result = {
                     id: u.id,
                     roles: [],
-                    name: u.name
+                    name: u.name,
+                    isAdmin: false
                 };
                 if (u.admin) {
                     result.roles.push(Roles.admin);
+                    result.isAdmin = true
                 }
             }
         }
 
         if (result!) {
-            return (jwt.sign(result, getJwtSecret()));
+            let token = (jwt.sign(result, getJwtSecret()));
+            // throw 'Hi'
+            u.loginDate = new Date()
+            await u.save()
+            return token
         }
         throw new Error(terms.invalidSignIn);
     }

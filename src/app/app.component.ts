@@ -1,15 +1,15 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Router, Route, ActivatedRoute } from '@angular/router';
 import { MatSidenav } from '@angular/material/sidenav';
-import { Remult } from 'remult';
-import { DialogService } from './common/dialog';
+import { ActivatedRoute, Route, Router } from '@angular/router';
 import { openDialog, RouteHelperService } from '@remult/angular';
-import { User } from './users/user';
-import { InputAreaComponent } from './common/input-area/input-area.component';
+import { Remult } from 'remult';
 import { AuthService } from './auth.service';
+import { DialogService } from './common/dialog';
+import { InputAreaComponent } from './common/input-area/input-area.component';
 import { terms } from './terms';
 import { SignInController } from './users/SignInController';
 import { UpdatePasswordController } from './users/UpdatePasswordController';
+import { User } from './users/user';
 
 @Component({
   selector: 'app-root',
@@ -17,6 +17,7 @@ import { UpdatePasswordController } from './users/UpdatePasswordController';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
+  date = new Date()
   constructor(
     public router: Router,
     public activeRoute: ActivatedRoute,
@@ -40,6 +41,10 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
 
+  }
+
+  refresh() {
+    window?.location?.reload()
   }
 
   signOut() {
@@ -105,5 +110,13 @@ export class AppComponent implements OnInit {
   openSite(url: string) {
     window.open(url, '_blank')
   }
-  
+
+  showRemultUser(e: MouseEvent) {
+    try {
+      if (e.ctrlKey) { alert(JSON.stringify(this.remult.user)) }
+    }
+    catch (err) { console.log(err) }
+  }
+
+
 }

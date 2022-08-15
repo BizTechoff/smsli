@@ -8,7 +8,7 @@ import swaggerUi from 'swagger-ui-express';
 import { getJwtSecret } from '../app/users/SignInController';
 import { api } from './api';
 import './send-sms';
-
+ 
 config(); //loads the configuration from the .env file
  
 async function startup() {

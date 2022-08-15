@@ -1,11 +1,14 @@
 <div style="height:100%;display:flex;flex-direction: column;">
+  <div class="top-left" (click)="this.showRemultUser($event)">
+    {{ 'בס"ד' }}
+  </div>
   <mat-toolbar color="primary" style="flex-shrink: 0;">
-    <button mat-button class="sidenav-toggle" (click)="sidenav.toggle()">
+    <button *ngIf="remult.authenticated()" mat-button class="sidenav-toggle" (click)="sidenav.toggle()">
       <mat-icon>menu</mat-icon>
     </button>
-    <span class="toolbar-title">{{currentTitle()}}</span>
+    <span class="toolbar-title" [style]="remult.authenticated()?'':'text-align: center;'">{{currentTitle()}}</span>
     <ng-container *ngIf="!remult.authenticated()">
-      <button mat-flat-button color="primary" (click)="signIn()">{{terms.signIn}}</button>
+      <!-- <button mat-flat-button color="primary" (click)="signIn()">{{terms.signIn}}</button> -->
     </ng-container>
     <ng-container *ngIf="remult.authenticated()">
       <button mat-flat-button color="primary" [matMenuTriggerFor]="menu">{{remult.user.name}}</button>
@@ -17,7 +20,7 @@
     </ng-container>
   </mat-toolbar>
   <mat-sidenav-container class="app-sidenav-container">
-    <mat-sidenav #sidenav class="app-sidenav mat-elevation-z10 no-print" [opened]="!dialogService.isScreenSmall()"
+    <mat-sidenav #sidenav *ngIf="remult.authenticated()" class="app-sidenav mat-elevation-z10 no-print" [opened]="!dialogService.isScreenSmall()"
       [mode]="dialogService.isScreenSmall()?'over':'side'">
       <div style="width:100%;text-align: center">
 
@@ -44,11 +47,22 @@
     </div>
 
   </mat-sidenav-container>
-  
-  <div class="footer" style="font-size: smaller;">
-    <div style="display:flex;flex-direction: row;justify-content: flex-end;">
-      <div style="margin-left: 3px; cursor: pointer;" (click)="openSite('https://biztechoff.co.il')"> {{ 'BizTechoff::v'
-        + terms.appVersion }} </div>
+
+  <div class="footer" style="font-size: smaller; align-items: center;">
+    <div style="display:flex; flex-direction: row; justify-content: space-between; align-items: center;">
+      <div style="display:flex; flex-direction: row; justify-content: flex-end; align-items: center;">
+        <div style="margin-right: 3px; align-items: center;">
+          <button title="רענן" (click)="this.refresh()" style="margin: 0; padding: 0; align-items: center; border: none; background-color: transparent;">
+            <mat-icon color="" class="icon-display" [inline]="true">refresh</mat-icon>
+            </button>
+          <mat-label title="רענון אחרון"> {{ this.date | date:'dd.MM.yyyy HH:mm' }} </mat-label>
+        </div>
+      </div>
+      <div style="display:flex; flex-direction: row; justify-content: flex-start;">
+        <div style="margin-left: 3px; cursor: pointer;" (click)="openSite('https://biztechoff.co.il')"> {{
+          'BizTechoff::v'
+          + terms.appVersion }} </div>
+      </div>
     </div>
   </div>
 

@@ -23,6 +23,9 @@ import { YesNoQuestionComponent } from './common/yes-no-question/yes-no-question
 import { InputAreaComponent } from './common/input-area/input-area.component';
 import { DialogService } from './common/dialog';
 import { AdminGuard } from "./users/AdminGuard";
+import { SmsimComponent } from './core/sms/smsim/smsim.component';
+import { MobilesComponent } from './core/mobile/mobiles/mobiles.component';
+import { SendComponent } from './core/send/send/send.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +33,10 @@ import { AdminGuard } from "./users/AdminGuard";
     UsersComponent,
     HomeComponent,
     YesNoQuestionComponent,
-    InputAreaComponent
+    InputAreaComponent,
+    SmsimComponent,
+    MobilesComponent,
+    SendComponent
   ],
   imports: [
     BrowserModule,
