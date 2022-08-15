@@ -108,14 +108,14 @@ export class SmsimComponent implements OnInit {
     let u: Sms
     let title = ''
     if (id?.trim().length) {
-      title = 'עדכון אברך'
+      title = 'עדכון הודעה'
       u = await this.remult.repo(Sms).findId(id, { useCache: false })
       if (!u) {
         throw `Error user id: '${id}'`
       }
     }
     else {
-      title = 'הוספת אברך'
+      title = 'הוספת הודעה'
       u = this.remult.repo(Sms).create()
       // u.avrech = true
     }

@@ -60,6 +60,10 @@ export class MobilesComponent implements OnInit {
       name: terms.smsim,
       click: async () => {
       }
+    }, {
+      name: terms.groups,
+      click: async () => {
+      }
     }],
     // confirmDelete: async (h) => {
     //   return await this.dialog.confirmDelete(h.name)
@@ -77,14 +81,14 @@ export class MobilesComponent implements OnInit {
     let u: Mobile
     let title = ''
     if (id?.trim().length) {
-      title = 'עדכון אברך'
+      title = 'עדכון סלולרי'
       u = await this.remult.repo(Mobile).findId(id, { useCache: false })
       if (!u) {
         throw `Error user id: '${id}'`
       }
     }
     else {
-      title = 'הוספת אברך'
+      title = 'הוספת סלולרי'
       u = this.remult.repo(Mobile).create()
       // u.avrech = true
     }

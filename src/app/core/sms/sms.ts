@@ -19,7 +19,7 @@ export class Sms extends IdEntity {
     @DataControl<Sms, SmsType>({ width: DEFUALT_STRING_WIDTH })
     @Field(() => SmsType)
     type = SmsType.flash
-
+ 
     @Fields.string({
         caption: 'תוכן הודעה',
         validate: [Validators.required.withMessage(terms.requiredField)]

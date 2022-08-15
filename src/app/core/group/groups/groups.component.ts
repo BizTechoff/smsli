@@ -41,7 +41,7 @@ export class GroupsComponent implements OnInit {
     rowsInPage: 25,
 
     columnSettings: row => [
-      row.name
+      { field: row.name, width: '300' }
     ],
     gridButtons: [
       {
@@ -81,14 +81,14 @@ export class GroupsComponent implements OnInit {
     let u: Group
     let title = ''
     if (id?.trim().length) {
-      title = 'עדכון אברך'
+      title = 'עדכון קבוצה'
       u = await this.remult.repo(Group).findId(id, { useCache: false })
       if (!u) {
         throw `Error user id: '${id}'`
       }
     }
     else {
-      title = 'הוספת אברך'
+      title = 'הוספת קבוצה'
       u = this.remult.repo(Group).create()
       // u.avrech = true
     }

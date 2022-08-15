@@ -24,9 +24,11 @@ export class SendComponent implements OnInit {
   async ngOnInit() {
     await this.refresh()
   }
- 
+
   async refresh() {
-    this.mobiles = await this.remult.repo(Mobile).find({where: {fname: 'מוטי'}})
+    this.mobiles = await this.remult.repo(Mobile).find({
+      where: { enabled: true }
+    })
   }
 
   async addMobilesFromExcel() {
@@ -95,7 +97,7 @@ export class SendComponent implements OnInit {
     await this.sms.save()
     console.log(1)
     for (const m of this.mobiles) {
-      if (m.enabled) { 
+      if (m.enabled) {
         let sm = this.remult.repo(SmsMobile).create()
         sm.sms = this.sms
         sm.mobile = m
