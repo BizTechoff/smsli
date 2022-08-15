@@ -1,14 +1,24 @@
 import { DataControl } from "@remult/angular/interfaces";
-import { Allow, Entity, Field, Fields, IdEntity } from "remult";
-import { DEFUALT_Date_WIDTH, DEFUALT_DAY_WIDTH, DEFUALT_STRING_WIDTH, DEFUALT_TIME_WIDTH } from "../../terms";
+import { Allow, Entity, Field, Fields, IdEntity, isBackend, Validators } from "remult";
+import { DEFUALT_Date_WIDTH, DEFUALT_DAY_WIDTH, DEFUALT_STRING_WIDTH, DEFUALT_TIME_WIDTH, terms } from "../../terms";
 import { ByName } from "./byName";
 
-@Entity('smsim', (options, remult) => {
+@Entity<Sms>('smsim', (options, remult) => {
     options.allowApiCrud = Allow.authenticated
+    options.saving = async (user) => {
+        if (isBackend()) {
+            if (user._.isNew()) {
+                user.createDate = new Date();
+            }
+        }
+    }
 })
 export class Sms extends IdEntity {
 
-    @Fields.string({ caption: 'תוכן ההודעה' })
+    @Fields.string({
+        caption: 'תוכן ההודעה',
+        validate: [Validators.required.withMessage(terms.requiredField)]
+    })
     text = ''
 
     @DataControl<Sms, ByName>({ width: DEFUALT_STRING_WIDTH })
@@ -50,6 +60,12 @@ export class Sms extends IdEntity {
     @DataControl<Sms, boolean>({ width: DEFUALT_DAY_WIDTH })
     @Fields.boolean({ caption: 'ז' })
     saturday = false
+
+    @Fields.date({
+        caption:'נוצר ב',
+        allowApiUpdate: false
+    })
+    createDate = new Date();
 
 
     isOneOdDayWeekSelected(): boolean {

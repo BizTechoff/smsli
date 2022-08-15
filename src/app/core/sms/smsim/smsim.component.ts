@@ -32,14 +32,13 @@ export class SmsimComponent implements OnInit {
   }
 
   smsim = new GridSettings(this.remult.repo(Sms), {
-    allowDelete: true,
-    allowInsert: true,
-    allowUpdate: true,
+    // allowDelete: true,
+    // allowInsert: true,
+    // allowUpdate: true,
+    allowCrud: false,
     numOfColumnsInGrid: 15,
-
-    orderBy: { byName: "asc" },
+    orderBy: { createDate: "desc" },
     rowsInPage: 25,
-
     columnSettings: row => [
       row.byName,
       row.text,
@@ -51,7 +50,8 @@ export class SmsimComponent implements OnInit {
       row.wednesday,
       row.thursday,
       row.friday,
-      row.saturday//,
+      row.saturday,
+      row.createDate//,
       // { field: row.sunday, caption: '1', width: '10', readOnly: true },
       // { field: row.monday, caption: '2', width: '10', readOnly: true },
       // { field: row.tuesday, caption: '3', width: '10', readOnly: true },
@@ -87,11 +87,21 @@ export class SmsimComponent implements OnInit {
     // },
   });
 
-  ngOnInit() {
+  loaded = false
+  async ngOnInit() {
+    // console.log('this.smsim.items.length',this.smsim.items.length)
+    await this.smsim.reloadData()
+    // console.log('this.smsim.items.length',this.smsim.items.length)
+    if (this.smsim.items.length === 0) {
+      // await this.upsertUser()
+    }
+    this.loaded = true
   }
 
   async refresh() {
+    // console.log('this.smsim.items.length',this.smsim.items.length)
     await this.smsim.reloadData()
+    // console.log('this.smsim.items.length',this.smsim.items.length)
   }
 
   async upsertUser(id = '') {

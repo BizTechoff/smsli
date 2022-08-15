@@ -61,12 +61,13 @@ export const terms = {
     sendSigninDetails: 'שלח פרטי התחברות',
     send:'שליחה',
     mobiles:'סלולרים',
+    groups:'קבוצות',
     smsim:'הודעות'
 }
 
 export const DEFUALT_TIME_WIDTH = '69'
 export const DEFUALT_Date_WIDTH = '99'
-export const DEFUALT_DAY_WIDTH = '10'
+export const DEFUALT_DAY_WIDTH = '45'
 export const DEFUALT_STRING_WIDTH = '99'
 
 declare module 'remult' {

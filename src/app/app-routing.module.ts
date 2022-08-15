@@ -12,6 +12,7 @@ import { SendComponent } from './core/send/send/send.component';
 import { SmsimComponent } from './core/sms/smsim/smsim.component';
 import { terms } from './terms';
 import { AdminGuard } from "./users/AdminGuard";
+import { GroupsComponent } from './core/group/groups/groups.component';
 
 const defaultRoute = 'login'
 //  terms.home;
@@ -20,6 +21,7 @@ const routes: Routes = [
   { path: terms.send, component: SendComponent, canActivate: [AdminGuard] },
   { path: terms.smsim, component: SmsimComponent, canActivate: [AdminGuard] },
   { path: terms.mobiles, component: MobilesComponent, canActivate: [AdminGuard] },
+  { path: terms.groups, component: GroupsComponent, canActivate: [AdminGuard] },
   { path: '**', redirectTo: '/' + defaultRoute, pathMatch: 'full' }
 
 ];
