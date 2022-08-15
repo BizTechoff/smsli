@@ -26,6 +26,7 @@ import { AdminGuard } from "./users/AdminGuard";
 import { SmsimComponent } from './core/sms/smsim/smsim.component';
 import { MobilesComponent } from './core/mobile/mobiles/mobiles.component';
 import { SendComponent } from './core/send/send/send.component';
+import { GroupsComponent } from './core/group/groups/groups.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import { SendComponent } from './core/send/send/send.component';
     InputAreaComponent,
     SmsimComponent,
     MobilesComponent,
-    SendComponent
+    SendComponent,
+    GroupsComponent
   ],
   imports: [
     BrowserModule,

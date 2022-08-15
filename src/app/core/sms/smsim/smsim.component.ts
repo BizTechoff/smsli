@@ -35,16 +35,37 @@ export class SmsimComponent implements OnInit {
     allowDelete: true,
     allowInsert: true,
     allowUpdate: true,
-    numOfColumnsInGrid: 10,
+    numOfColumnsInGrid: 15,
 
     orderBy: { byName: "asc" },
     rowsInPage: 25,
 
     columnSettings: row => [
       row.byName,
+      row.text,
       row.date,
       row.time,
-      row.text
+      row.sunday,
+      row.monday,
+      row.tuesday,
+      row.wednesday,
+      row.thursday,
+      row.friday,
+      row.saturday//,
+      // { field: row.sunday, caption: '1', width: '10', readOnly: true },
+      // { field: row.monday, caption: '2', width: '10', readOnly: true },
+      // { field: row.tuesday, caption: '3', width: '10', readOnly: true },
+      // { field: row.wednesday, caption: '4', width: '10', readOnly: true },
+      // { field: row.thursday, caption: '5', width: '10', readOnly: true },
+      // { field: row.friday, caption: '6', width: '10', readOnly: true },
+      // { field: row.saturday, caption: '7', width: '10', readOnly: true },
+    ],
+    gridButtons: [
+      {
+        name: 'רענן',
+        icon: 'refresh',
+        click: async () => await this.refresh()
+      }
     ],
     rowButtons: [{
       name: terms.resetPassword,
@@ -95,9 +116,22 @@ export class SmsimComponent implements OnInit {
         fields: () => [
 
           u.$.byName,
-          [u.$.date,
-          u.$.time],
-          u.$.text
+          [
+            u.$.date,
+            u.$.time
+          ],
+          u.$.text,
+          [
+            u.$.sunday,
+            u.$.monday,
+            u.$.tuesday
+          ],
+          [
+            u.$.wednesday,
+            u.$.thursday,
+            u.$.friday
+          ]//,
+          // u.$.saturday]
           // u.$.address,
           // u.$.missionLocation,
           // u.$.missionDate,

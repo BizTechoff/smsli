@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { Remult } from 'remult';
+import { Fields, getFields, Remult } from 'remult';
 
-import { GridSettings } from '@remult/angular/interfaces';
+import { openDialog } from '@remult/angular';
+import { DataControl, GridSettings } from '@remult/angular/interfaces';
 import { DialogService } from '../../../common/dialog';
+import { InputAreaComponent } from '../../../common/input-area/input-area.component';
 import { terms } from '../../../terms';
 import { Roles } from '../../../users/roles';
 import { Mobile } from '../mobile';
@@ -16,6 +18,15 @@ import { Mobile } from '../mobile';
 export class MobilesComponent implements OnInit {
   constructor(private dialog: DialogService, public remult: Remult) {
   }
+  get $() { return getFields(this, this.remult) };
+  terms = terms
+
+  @DataControl<MobilesComponent>({
+    valueChange: async (row, col) => await row?.refresh()
+  })
+  @Fields.string({ caption: 'חיפוש סלולרי' })
+  search = ''
+
   isAdmin() {
     return this.remult.isAllowed(Roles.admin);
   }
@@ -55,6 +66,49 @@ export class MobilesComponent implements OnInit {
   });
 
   ngOnInit() {
+  }
+
+  async refresh() {
+    await this.mobiles.reloadData()
+  }
+
+  async upsertUser(id = '') {
+    let u: Mobile
+    let title = ''
+    if (id?.trim().length) {
+      title = 'עדכון אברך'
+      u = await this.remult.repo(Mobile).findId(id, { useCache: false })
+      if (!u) {
+        throw `Error user id: '${id}'`
+      }
+    }
+    else {
+      title = 'הוספת אברך'
+      u = this.remult.repo(Mobile).create()
+      // u.avrech = true
+    }
+
+    let changed = await openDialog(InputAreaComponent,
+      dlg => dlg.args = {
+        title: title,
+        fields: () => [
+
+          [
+            u.$.fname,
+            u.$.lname
+          ],
+          u.$.number,
+          u.$.remark
+        ],
+        ok: async () => {
+          await u.save()
+        }
+      },
+      dlg => dlg ? dlg.ok : false)
+    if (changed) {
+      // await u.save()
+      await this.refresh()
+    }
   }
 
 }
