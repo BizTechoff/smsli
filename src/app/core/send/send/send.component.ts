@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { openDialog } from '@remult/angular';
-import { Remult } from 'remult';
+import { Allow, BackendMethod, Remult } from 'remult';
 import { DialogService } from '../../../common/dialog';
 import { InputAreaComponent } from '../../../common/input-area/input-area.component';
 import { NotificationService } from '../../../common/notificationService';
@@ -47,6 +47,44 @@ export class SendComponent implements OnInit {
           await this.refresh()
         }
       })
+  }
+
+  @BackendMethod<SendComponent>({ allowed: Allow.authenticated })
+  async sendSmsMobiles(smsMobileId = '', remult?: Remult) {
+    for await (const s of remult!.repo(SmsMobile).query({
+      where: { id: smsMobileId }
+    })) {
+      if (s.status !== SendStatus.sent) {
+        let text = s.sms.text
+        if (text.includes('!name!')) {
+          text = text.replace(
+            '!name!',
+            this.sms.byName.isFname()
+              ? s.mobile.fname
+              : this.sms.byName.isLname()
+                ? s.mobile.lname
+                : s.mobile.fname + ' ' + s.mobile.lname)
+        }
+        let sent = await NotificationService.SendSms({
+          message: text,
+          mobile: s.mobile.number,
+          uid: remult!.user.id//,
+          // schedule
+        })
+        if (sent) {
+          if (sent.success) {
+            s.status = SendStatus.sent
+            await s.save()
+          }
+          else {
+            console.error('Error sending: ' + sent.message)
+          }
+        }
+        else {
+          console.error('UnKnown ERROR')
+        }
+      }
+    }
   }
 
   async send() {

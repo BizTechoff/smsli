@@ -24,7 +24,7 @@ export class SmsimComponent implements OnInit {
   @DataControl<SmsimComponent>({
     valueChange: async (row, col) => await row?.refresh()
   })
-  @Fields.string({ caption: 'חיפוש הודעה' })
+  @Fields.string({ caption: 'חיפוש תוכן הודעה' })
   search = ''
 
   isAdmin() {

@@ -16,7 +16,7 @@ import { ByName } from "./byName";
 export class Sms extends IdEntity {
 
     @Fields.string({
-        caption: 'תוכן ההודעה',
+        caption: 'תוכן הודעה',
         validate: [Validators.required.withMessage(terms.requiredField)]
     })
     text = ''
