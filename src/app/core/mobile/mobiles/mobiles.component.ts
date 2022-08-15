@@ -44,7 +44,8 @@ export class MobilesComponent implements OnInit {
       row.fname,
       row.lname,
       row.number,
-      row.remark
+      row.remark,
+      row.enabled
     ],
     rowButtons: [{
       name: terms.resetPassword,
@@ -98,7 +99,8 @@ export class MobilesComponent implements OnInit {
             u.$.lname
           ],
           u.$.number,
-          u.$.remark
+          u.$.remark,
+          u.$.enabled
         ],
         ok: async () => {
           await u.save()

@@ -24,9 +24,9 @@ export class SendComponent implements OnInit {
   async ngOnInit() {
     await this.refresh()
   }
-
+ 
   async refresh() {
-    this.mobiles = await this.remult.repo(Mobile).find()
+    this.mobiles = await this.remult.repo(Mobile).find({where: {fname: 'מוטי'}})
   }
 
   async addMobilesFromExcel() {
@@ -52,36 +52,39 @@ export class SendComponent implements OnInit {
   @BackendMethod<SendComponent>({ allowed: Allow.authenticated })
   async sendSmsMobiles(smsMobileId = '', remult?: Remult) {
     for await (const s of remult!.repo(SmsMobile).query({
-      where: { id: smsMobileId }
+      where: { id: smsMobileId /*, mobile: {enabled: true }*/ }
     })) {
-      if (s.status !== SendStatus.sent) {
-        let text = s.sms.text
-        if (text.includes('!name!')) {
-          text = text.replace(
-            '!name!',
-            this.sms.byName.isFname()
-              ? s.mobile.fname
-              : this.sms.byName.isLname()
-                ? s.mobile.lname
-                : s.mobile.fname + ' ' + s.mobile.lname)
-        }
-        let sent = await NotificationService.SendSms({
-          message: text,
-          mobile: s.mobile.number,
-          uid: remult!.user.id//,
-          // schedule
-        })
-        if (sent) {
-          if (sent.success) {
-            s.status = SendStatus.sent
-            await s.save()
+      if (s.mobile.enabled) {
+        if (s.status !== SendStatus.sent) {
+          let text = s.sms.text
+          if (text.includes('!name!')) {
+            text = text.replace(
+              '!name!',
+              this.sms.byName.isFname()
+                ? s.mobile.fname
+                : this.sms.byName.isLname()
+                  ? s.mobile.lname
+                  : s.mobile.fname + ' ' + s.mobile.lname)
+          }
+          let sent = await NotificationService.SendSms({
+            messageType: s.sms.type.id,
+            message: text,
+            mobile: s.mobile.number,
+            uid: remult!.user.id//,
+            // schedule
+          })
+          if (sent) {
+            if (sent.success) {
+              s.status = SendStatus.sent
+              await s.save()
+            }
+            else {
+              console.error('Error sending: ' + sent.message)
+            }
           }
           else {
-            console.error('Error sending: ' + sent.message)
+            console.error('UnKnown ERROR')
           }
-        }
-        else {
-          console.error('UnKnown ERROR')
         }
       }
     }
@@ -92,39 +95,42 @@ export class SendComponent implements OnInit {
     await this.sms.save()
     console.log(1)
     for (const m of this.mobiles) {
-      let sm = this.remult.repo(SmsMobile).create()
-      sm.sms = this.sms
-      sm.mobile = m
-      sm.status = SendStatus.sending
-      await sm.save()
-      console.log(2)
-      let msg = this.sms.text
-      if (msg.includes('!name!')) {
-        msg = msg.replace(
-          '!name!',
-          this.sms.byName.isFname()
-            ? m.fname
-            : this.sms.byName.isLname()
-              ? m.lname
-              : m.fname + ' ' + m.lname)
-      }
-      let sent = await NotificationService.SendSms({
-        message: msg,
-        mobile: m.number,
-        uid: this.remult.user.id//,
-        // schedule
-      })
-      console.log(3, JSON.stringify(sent))
+      if (m.enabled) { 
+        let sm = this.remult.repo(SmsMobile).create()
+        sm.sms = this.sms
+        sm.mobile = m
+        sm.status = SendStatus.sending
+        await sm.save()
+        console.log(2)
+        let msg = this.sms.text
+        if (msg.includes('!name!')) {
+          msg = msg.replace(
+            '!name!',
+            this.sms.byName.isFname()
+              ? m.fname
+              : this.sms.byName.isLname()
+                ? m.lname
+                : m.fname + ' ' + m.lname)
+        }
+        let sent = await NotificationService.SendSms({
+          messageType: this.sms.type.id,
+          message: msg,
+          mobile: m.number,
+          uid: this.remult.user.id//,
+          // schedule
+        })
+        console.log(3, JSON.stringify(sent))
 
-      if (sent && sent.success) {
-        sm.status = SendStatus.sent
-        await sm.save()
-        this.dialog.info('נשלח בהצלחה');
-      }
-      else {
-        sm.status = SendStatus.error
-        await sm.save()
-        this.dialog.info('שליחה נכשלה');
+        if (sent && sent.success) {
+          sm.status = SendStatus.sent
+          await sm.save()
+          this.dialog.info('נשלח בהצלחה');
+        }
+        else {
+          sm.status = SendStatus.error
+          await sm.save()
+          this.dialog.info('שליחה נכשלה');
+        }
       }
     }
   }

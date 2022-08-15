@@ -26,4 +26,9 @@ export class Mobile extends IdEntity {
     })
     remark = ''
 
+    @Fields.boolean((options, remult) => {
+        options.caption = 'פעיל'
+    })
+    enabled = true
+
 }

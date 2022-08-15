@@ -1,7 +1,8 @@
 import { DataControl } from "@remult/angular/interfaces";
 import { Allow, Entity, Field, Fields, IdEntity, isBackend, Validators } from "remult";
-import { DEFUALT_Date_WIDTH, DEFUALT_DAY_WIDTH, DEFUALT_STRING_WIDTH, DEFUALT_TIME_WIDTH, terms } from "../../terms";
+import { DEFUALT_DAY_WIDTH, DEFUALT_STRING_WIDTH, DEFUALT_TIME_WIDTH, terms } from "../../terms";
 import { ByName } from "./byName";
+import { SmsType } from "./smsType";
 
 @Entity<Sms>('smsim', (options, remult) => {
     options.allowApiCrud = Allow.authenticated
@@ -15,6 +16,10 @@ import { ByName } from "./byName";
 })
 export class Sms extends IdEntity {
 
+    @DataControl<Sms, SmsType>({ width: DEFUALT_STRING_WIDTH })
+    @Field(() => SmsType)
+    type = SmsType.flash
+
     @Fields.string({
         caption: 'תוכן הודעה',
         validate: [Validators.required.withMessage(terms.requiredField)]
@@ -25,7 +30,7 @@ export class Sms extends IdEntity {
     @Field(() => ByName)
     byName = ByName.fname
 
-    @DataControl<Sms, Date>({ width: DEFUALT_Date_WIDTH })
+    @DataControl<Sms, Date>({ width: '149' })
     @Fields.dateOnly({ caption: 'תאריך' })
     date!: Date
 
@@ -62,7 +67,7 @@ export class Sms extends IdEntity {
     saturday = false
 
     @Fields.date({
-        caption:'נוצר ב',
+        caption: 'נוצר ב',
         allowApiUpdate: false
     })
     createDate = new Date();

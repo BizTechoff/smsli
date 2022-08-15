@@ -1,10 +1,12 @@
 import * as fetch from 'node-fetch';
 import { NotificationService } from '../app/common/notificationService';
+import { SmsType } from '../app/core/sms/smsType';
 
 export interface SmsRequest {
     uid: string,
     mobile: string,
     message: string,
+    messageType: string,
     schedule?: string
 }
 export interface SendSmsResponse {
@@ -26,6 +28,7 @@ NotificationService.sendSms = async (req: SmsRequest): Promise<{ success: boolea
             .replace('!user!', process.env['SMS_ACCOUNT']!)
             .replace('!password!', process.env['SMS_PASSWORD']!)
             .replace('!from!', process.env['SMS_FROM_NAME']!)
+            .replace('!message_type!', encodeURI(req.messageType.toUpperCase()))
             .replace('!mobile!', req.mobile)
             .replace('!message!', encodeURI(req.message))
             .replace('!userid!', req.uid)
@@ -36,6 +39,7 @@ NotificationService.sendSms = async (req: SmsRequest): Promise<{ success: boolea
         if (usa) {
             console.debug('url', url);
         }
+        console.debug('url', url);
         let r = await fetch.default(url, {//require('node-fetch').
             method: 'GET'
         });
