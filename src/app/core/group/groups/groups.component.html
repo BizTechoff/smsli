@@ -1,9 +1,9 @@
 <div class="full-page">
   <div class="header">
     <div style="display: flex; flex-direction: column; justify-content: space-between; ">
-      <div style="display: flex; flex-direction: row; justify-content: space-between; ">
-        <h1 *ngIf="this.args?.title"> {{ this.args.title }} </h1>
-        <button tabindex="-1" color="primary" mat-mini-fab style="padding: 0; margin: 0;" (click)="this.close()">
+      <div *ngIf="this.args?.mid?.length" style="display: flex; flex-direction: row; justify-content: space-between; ">
+        <h1> {{ this.args.title }} </h1>
+        <button  tabindex="-1" color="primary" mat-mini-fab style="padding: 0; margin: 0;" (click)="this.close()">
           <mat-icon>close</mat-icon>
           <!-- mat-mini-fab  color="primary" -->
         </button>

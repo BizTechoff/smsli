@@ -1,4 +1,6 @@
+import { DataControl } from "@remult/angular/interfaces";
 import { Allow, Entity, Fields, IdEntity, isBackend } from "remult";
+import { DEFUALT_BOOL_WIDTH, DEFUALT_MOBILE_WIDTH, DEFUALT_STRING_WIDTH } from "../../terms";
 import { GroupMobile } from "../group-mobile";
 import { Group } from "../group/group";
 
@@ -26,16 +28,19 @@ import { Group } from "../group/group";
 })
 export class Mobile extends IdEntity {
 
+    @DataControl<Mobile, string>({ width: DEFUALT_MOBILE_WIDTH })
     @Fields.string((options, remult) => {
         options.caption = 'סלולרי'
     })
     number = ''
 
+    @DataControl<Mobile, string>({ width: DEFUALT_STRING_WIDTH })
     @Fields.string((options, remult) => {
         options.caption = 'שם פרטי'
     })
     fname = ''
 
+    @DataControl<Mobile, string>({ width: DEFUALT_STRING_WIDTH })
     @Fields.string((options, remult) => {
         options.caption = 'שם משפחה'
     })
@@ -46,9 +51,14 @@ export class Mobile extends IdEntity {
     })
     remark = ''
 
+    @DataControl<Mobile, string>({ width: DEFUALT_BOOL_WIDTH })
     @Fields.boolean((options, remult) => {
         options.caption = 'פעיל'
     })
     enabled = true
+
+    fullName() {
+        return `${this.fname ?? ''} ${this.lname ?? ''}`.trim()
+    }
 
 }

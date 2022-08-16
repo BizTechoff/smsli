@@ -8,6 +8,7 @@ import { terms } from '../../../terms';
 import { Roles } from '../../../users/roles';
 import { GroupMobile } from '../../group-mobile';
 import { Mobile } from '../../mobile/mobile';
+import { MobilesComponent } from '../../mobile/mobiles/mobiles.component';
 import { Group } from '../group';
 
 @Component({
@@ -24,7 +25,8 @@ export class GroupsComponent implements OnInit {
     changed?: boolean,
     mid?: string
   } = { title: '', selected: [] as string[], multi: false, changed: false, mid: '' }
-  constructor(private dialog: DialogService, private remult: Remult) {
+  constructor(private dialog: DialogService, private remult: Remult) {//, private win: MatDialogRef<any>) {
+    console.log('GroupsComponent.constructor CALLED')
   }
   get $() { return getFields(this, this.remult) };
   terms = terms
@@ -86,12 +88,17 @@ export class GroupsComponent implements OnInit {
         console.dir(this.args.selected)
       }
 
-      for await (const g of this.remult.repo(GroupMobile).query({
+      for await (const gm of this.remult.repo(GroupMobile).query({
         where: { mobile: { $id: this.args.mid! } }
       })) {
-        this.args.selected!.push(g.id)
+        this.args.selected!.push(gm.group.id)
+        this.smsim.selectedRows.push(gm.group)
       }
       console.dir(this.args.selected)
+
+      if (this.smsim.selectedRows.length) {
+        await this.refresh()
+      }
     }
   }
 
@@ -126,7 +133,8 @@ export class GroupsComponent implements OnInit {
         }
       }, {
         name: terms.mobiles,
-        click: async () => {
+        click: async row => {
+          await this.assignMobiles(row.id, row.name)
         }
       }
       ],
@@ -183,6 +191,20 @@ export class GroupsComponent implements OnInit {
     if (changed) {
       // await u.save()
       this.args.changed = true
+      await this.refresh()
+    }
+  }
+
+  async assignMobiles(gid: string, mname = '') {
+    if (!gid?.trim().length ?? false) {
+      throw 'assignMobiles got group-id NOT VALID'
+    }
+    // let title = 'שיוך סלולרי לקבוצות'
+    let title = `שיוך ${mname} לסלולרים`
+    let changed2 = await openDialog(MobilesComponent,
+      win => win.args = { title: title, gid: gid, multi: true },
+      win => win?.args.changed)
+    if (changed2) {
       await this.refresh()
     }
   }

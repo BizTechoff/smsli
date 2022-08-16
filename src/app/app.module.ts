@@ -27,7 +27,6 @@ import { SmsimComponent } from './core/sms/smsim/smsim.component';
 import { MobilesComponent } from './core/mobile/mobiles/mobiles.component';
 import { SendComponent } from './core/send/send/send.component';
 import { GroupsComponent } from './core/group/groups/groups.component';
-import { GroupsSelectorComponent } from './core/group/groups-selector/groups-selector.component';
 import { ExcelImportComponent } from './excel/excel-import/excel-import.component';
 
 @NgModule({
@@ -41,7 +40,6 @@ import { ExcelImportComponent } from './excel/excel-import/excel-import.componen
     MobilesComponent,
     SendComponent,
     GroupsComponent,
-    GroupsSelectorComponent,
     ExcelImportComponent
   ],
   imports: [
@@ -62,8 +60,8 @@ import { ExcelImportComponent } from './excel/excel-import/excel-import.componen
     MatMenuModule,
     RemultModule
   ],
-  providers: [DialogService, AdminGuard, GroupsComponent],
+  providers: [DialogService, AdminGuard],
   bootstrap: [AppComponent],
-  entryComponents: [YesNoQuestionComponent, InputAreaComponent]//,GroupsComponent
+  entryComponents: [YesNoQuestionComponent, InputAreaComponent, GroupsComponent]//,GroupsComponent
 })
 export class AppModule { }

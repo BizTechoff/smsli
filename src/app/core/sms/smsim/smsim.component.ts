@@ -124,8 +124,10 @@ export class SmsimComponent implements OnInit {
       dlg => dlg.args = {
         title: title,
         fields: () => [
-
-          u.$.byName,
+          [
+            u.$.byName,
+            u.$.type
+          ],
           [
             u.$.date,
             u.$.time

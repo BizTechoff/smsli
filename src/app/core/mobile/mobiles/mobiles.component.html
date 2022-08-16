@@ -1,6 +1,13 @@
 <div class="full-page">
     <div class="header">
       <div style="display: flex; flex-direction: column; justify-content: space-between; ">
+        <div *ngIf="this.args?.gid?.length" style="display: flex; flex-direction: row; justify-content: space-between; ">
+          <h1> {{ this.args.title }} </h1>
+          <button  tabindex="-1" color="primary" mat-mini-fab style="padding: 0; margin: 0;" (click)="this.close()">
+            <mat-icon>close</mat-icon>
+            <!-- mat-mini-fab  color="primary" -->
+          </button>
+        </div> 
         <div style="display: flex; flex-direction: row; justify-content: space-between; ">
           <div style="width: 100%;">
             <data-control [field]='this.$.search'></data-control>
@@ -9,12 +16,20 @@
         <div style="display: flex; flex-direction: row; justify-content: space-between; ">
           <button style="width: 100%;" mat-raised-button color='primary' (click)="upsertUser()">
             <mat-icon>add</mat-icon>
-            <mat-label> {{ 'הוספת סלולרי חדשה' }} </mat-label>
+            <mat-label> {{ 'הוספת סלולרי חדש' }} </mat-label>
           </button>
         </div>
       </div>
     </div>
     <div class="grow-item">
     <data-grid [settings]="this.mobiles"></data-grid>
+    </div>
+    <div class="footer">
+      <div style="display: flex; flex-direction: row; justify-content: space-between; ">
+        <button *ngIf="this.args?.gid?.length" style="width: 100%;" mat-raised-button color='accent' (click)="save()">
+          <mat-icon>save</mat-icon>
+          <mat-label> {{ 'עדכן' }} </mat-label>
+        </button>
+      </div>
     </div>
     </div>

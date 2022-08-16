@@ -8,6 +8,7 @@ import { InputAreaComponent } from '../../../common/input-area/input-area.compon
 import { terms } from '../../../terms';
 import { Roles } from '../../../users/roles';
 import { GroupMobile } from '../../group-mobile';
+import { Group } from '../../group/group';
 import { GroupsComponent } from '../../group/groups/groups.component';
 import { Mobile } from '../mobile';
 
@@ -18,6 +19,15 @@ import { Mobile } from '../mobile';
   styleUrls: ['./mobiles.component.scss']
 })
 export class MobilesComponent implements OnInit {
+
+  args: {
+    title?: string,
+    selected?: string[],
+    multi?: boolean,
+    changed?: boolean,
+    gid?: string
+  } = { title: '', selected: [] as string[], multi: false, changed: false, gid: '' }
+
   constructor(private dialog: DialogService, public remult: Remult) {
   }
   get $() { return getFields(this, this.remult) };
@@ -33,50 +43,136 @@ export class MobilesComponent implements OnInit {
     return this.remult.isAllowed(Roles.admin);
   }
 
-  mobiles = new GridSettings(this.remult.repo(Mobile), {
-    allowDelete: true,
-    allowInsert: true,
-    allowUpdate: true,
-    numOfColumnsInGrid: 10,
+  mobiles!: GridSettings<Mobile>
 
-    orderBy: { fname: "asc" },
-    rowsInPage: 25,
+  async ngOnInit() {
+    if (!this.args) {
+      this.args = { title: '', selected: [] as string[], multi: false, changed: false, gid: '' }
+    }
+    console.log(11, 'this.args', this.args)
+    this.args.selected = this.args.selected ?? [] as string[]
+    this.args.multi = this.args.multi ?? false
+    this.args.changed = this.args.changed ?? false
+    this.args.gid = this.args.gid ?? ''
+    this.args.title = this.args.title ?? ''
 
-    columnSettings: row => [
-      row.fname,
-      row.lname,
-      row.number,
-      row.remark,
-      row.enabled
-    ],
-    rowButtons: [{
-      name: terms.resetPassword,
-      click: async () => {
+    console.log(22, 'this.args', this.args)
+    this.intiGrid()
+    console.log(33)
 
-        // if (await this.dialog.yesNoQuestion(terms.passwordDeleteConfirmOf + " " + this.mobiles.currentRow.name)) {
-        //   await this.mobiles.currentRow.resetPassword();
-        //   this.dialog.info(terms.passwordDeletedSuccessful);
-        // };
+    if (this.args.gid) {
+      if (this.mobiles?.settings?.allowSelection) {
+        console.log(44)
+        this.mobiles.selectedChanged = row => {
+          console.log(55)
+          console.log(JSON.stringify(row))
+          let selected = this.mobiles.isSelected(row)
+          let i = this.args.selected!.indexOf(row.id)
+          let exists = i > -1
+
+          if (selected) {
+            if (!exists) {
+              this.args.selected!.push(row.id)
+            }
+            else { }
+          }
+          else if (!selected) {
+            if (!exists) {
+              this.args.selected!.push(row.id)
+            }
+            else {
+              this.args.selected!.slice(i, 1)
+            }
+          }
+        }
+        console.log(99)
+
+        console.dir(this.args.selected)
       }
-    }, {
-      name: terms.smsim,
-      click: async () => {
-      }
-    }, {
-      name: terms.groups,
-      click: async () => {
-      }
-    }],
-    // confirmDelete: async (h) => {
-    //   return await this.dialog.confirmDelete(h.name)
-    // },
-  });
 
-  ngOnInit() {
+      for await (const gm of this.remult.repo(GroupMobile).query({
+        where: { group: { $id: this.args.gid! } }
+      })) {
+        this.args.selected!.push(gm.mobile.id)
+        this.mobiles.selectedRows.push(gm.mobile)
+      }
+      console.dir(this.args.selected)
+
+      if (this.mobiles.selectedRows.length) {
+        await this.refresh()
+      }
+    }
+  }
+
+  intiGrid() {
+    this.mobiles = new GridSettings(this.remult.repo(Mobile), {
+      allowCrud: false,
+      numOfColumnsInGrid: 10,
+
+      orderBy: { fname: "asc" },
+      rowsInPage: 25,
+      allowSelection: this.args.multi,
+
+      columnSettings: row => {
+        let f = []
+        f.push(
+          row.fname,
+          row.lname,
+          row.number)
+        if (!this.args.gid?.length ?? false) {
+          f.push(
+            row.remark,
+            row.enabled
+          )
+        }
+        return f
+      },
+      gridButtons: [
+        {
+          name: 'רענן',
+          icon: 'refresh',
+          click: async () => await this.refresh()
+        }
+      ],
+      rowButtons: [{
+        name: terms.resetPassword,
+        click: async () => {
+
+          // if (await this.dialog.yesNoQuestion(terms.passwordDeleteConfirmOf + " " + this.mobiles.currentRow.name)) {
+          //   await this.mobiles.currentRow.resetPassword();
+          //   this.dialog.info(terms.passwordDeletedSuccessful);
+          // };
+        }
+      }, {
+        name: terms.smsim,
+        click: async () => {
+        }
+      }, {
+        name: terms.groups,
+        click: async row => {
+          await this.assignGroups(row.id, row.fullName())
+        }
+      }],
+      // confirmDelete: async (h) => {
+      //   return await this.dialog.confirmDelete(h.name)
+      // },
+    });
   }
 
   async refresh() {
     await this.mobiles.reloadData()
+  }
+
+  async save() {
+    if (this.args.gid?.trim().length) {
+      for (const mid of this.args.selected!) {
+        let gm = this.remult.repo(GroupMobile).create()
+        gm.group = await this.remult.repo(Group).findId(this.args.gid!)
+        gm.mobile = await this.remult.repo(Mobile).findId(mid)
+        await gm.save()
+      }
+      // this.win?.close()
+    }
   }
 
   async upsertUser(id = '') {
@@ -112,17 +208,15 @@ export class MobilesComponent implements OnInit {
         ok: async () => {
           // isNew = u.isNew()
           await m.save()
-          let groups = await this.remult.repo(GroupMobile).find({
-            where: { mobile: { $id: m.id } }
-          })
-          if (groups) {
-            let title = 'שיוך סלולרי לקבוצות'
-            let changed2 = await openDialog(GroupsComponent,
-              win => win.args = {title:title, mid: m.id, multi: true },
-              win => win?.args.changed)
-            if (changed2) {
-              await this.refresh()
-            }
+          if (this.args.gid?.length ?? false) {
+            let gm = this.remult.repo(GroupMobile).create()
+            gm.group = await this.remult.repo(Group).findId(this.args.gid!)
+            gm.mobile = m
+            await gm.save()
+          }
+          else {
+            await this.assignGroups(m.id, m.fullName())
+            await this.refresh()
           }
         }
       },
@@ -131,6 +225,24 @@ export class MobilesComponent implements OnInit {
       // await u.save()
       await this.refresh()
     }
+  }
+
+  async assignGroups(mid: string, mname = '') {
+    if (!mid?.trim().length ?? false) {
+      throw 'AssignGroups got mobile-id NOT VALID'
+    }
+    // let title = 'שיוך סלולרי לקבוצות'
+    let title = `שיוך ${mname} לקבוצות`
+    let changed2 = await openDialog(GroupsComponent,
+      win => win.args = { title: title, mid: mid, multi: true },
+      win => win?.args.changed)
+    if (changed2) {
+      await this.refresh()
+    }
+  }
+
+  async close() {
+
   }
 
 }

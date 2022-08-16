@@ -1,6 +1,6 @@
 export const terms = {
     
-    appVersion: '2022.08.16.3',
+    appVersion: '2022.08.16.5',
     home: 'סמס לו - שליחת מסרים לסלולרי',
     UserRoleNOTSET:'חובה סוג הרשאה',
     appName: 'מנהיגות תורנית',
@@ -66,9 +66,11 @@ export const terms = {
 }
 
 export const DEFUALT_TIME_WIDTH = '69'
-export const DEFUALT_Date_WIDTH = '99'
+export const DEFUALT_DATE_WIDTH = '99'
+export const DEFUALT_BOOL_WIDTH = '45'
 export const DEFUALT_DAY_WIDTH = '45'
 export const DEFUALT_STRING_WIDTH = '99'
+export const DEFUALT_MOBILE_WIDTH = '109'
 
 declare module 'remult' {
     export interface UserInfo {

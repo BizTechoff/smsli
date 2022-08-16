@@ -41,7 +41,7 @@ export class AuthService {
     nivaigateToDefaultUserPage(){
         // this.router.navigateByUrl(terms.send)
         if(this.remult.user.isAdmin)
-        {this.router.navigateByUrl(terms.send)
+        {this.router.navigateByUrl(terms.mobiles)
         }
     }
 }
