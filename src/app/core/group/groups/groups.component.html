@@ -14,7 +14,7 @@
         </div>
       </div>
     </div>
-    <div class="grow-item">
+    <div *ngIf="this.smsim" class="grow-item">
     <data-grid [settings]="this.smsim"></data-grid>
     </div>
     <div class="footer">
