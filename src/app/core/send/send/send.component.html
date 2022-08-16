@@ -3,10 +3,11 @@
   </div>
   <div style="display: flex; flex-direction: row; justify-content: space-between; height: 100%; width: 100%;">
     <div style="display: flex; flex-direction: column; justify-content: space-between; height: 100%; width: 100%;">
-      <button color="accent" mat-raised-button (click)="this.addMobilesFromExcel()">
+      <app-excel-import></app-excel-import>
+      <!-- <button color="accent" mat-raised-button (click)="this.addMobilesFromExcel()">
         <mat-label>הוסף אקסל</mat-label>
         <mat-icon>receipt_long</mat-icon>
-      </button>
+      </button> -->
       <button color="accent" mat-raised-button (click)="this.addMobile()">
         <mat-label>הוסף לקוח</mat-label>
         <mat-icon>person</mat-icon>

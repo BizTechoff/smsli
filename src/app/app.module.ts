@@ -28,6 +28,7 @@ import { MobilesComponent } from './core/mobile/mobiles/mobiles.component';
 import { SendComponent } from './core/send/send/send.component';
 import { GroupsComponent } from './core/group/groups/groups.component';
 import { GroupsSelectorComponent } from './core/group/groups-selector/groups-selector.component';
+import { ExcelImportComponent } from './excel/excel-import/excel-import.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { GroupsSelectorComponent } from './core/group/groups-selector/groups-sel
     MobilesComponent,
     SendComponent,
     GroupsComponent,
-    GroupsSelectorComponent
+    GroupsSelectorComponent,
+    ExcelImportComponent
   ],
   imports: [
     BrowserModule,
