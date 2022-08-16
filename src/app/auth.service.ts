@@ -9,7 +9,7 @@ import { terms } from './terms';
 })
 export class AuthService {
     loadedFromStorage = false
-    constructor(private remult: Remult,public router: Router) {
+    constructor(private remult: Remult, public router: Router) {
         const token = AuthService.fromStorage();
         if (token) {
             this.loadedFromStorage = true
@@ -38,10 +38,10 @@ export class AuthService {
         return sessionStorage.getItem(AUTH_TOKEN_KEY) || localStorage.getItem(AUTH_TOKEN_KEY)!;
     }
 
-    nivaigateToDefaultUserPage(){
+    nivaigateToDefaultUserPage() {
         // this.router.navigateByUrl(terms.send)
-        if(this.remult.user.isAdmin)
-        {this.router.navigateByUrl(terms.smsim)
+        if (this.remult.user.isAdmin) {
+            // this.router.navigateByUrl(terms.smsim)
         }
     }
 }

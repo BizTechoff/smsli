@@ -1,6 +1,6 @@
 export const terms = {
     
-    appVersion: '2022.08.16.10',
+    appVersion: '2022.08.16.11',
     home: 'סמס לו - שליחת מסרים לסלולרי',
     UserRoleNOTSET:'חובה סוג הרשאה',
     appName: 'מנהיגות תורנית',
@@ -60,6 +60,7 @@ export const terms = {
     addLecturesGrades:'העלאת גליון ציונים',
     sendSigninDetails: 'שלח פרטי התחברות',
     send:'שליחה',
+    toda:'תודה',
     mobiles:'סלולרים',
     groups:'קבוצות',
     smsim:'הודעות'

@@ -138,7 +138,7 @@ export class MobilesComponent implements OnInit {
           row.fname,
           row.lname,
           row.number)
-        if (!this.args.gid?.length ?? false) {
+        if (!(this.args.gid?.length ?? false) && !(this.args.sid?.length ?? false)) {
           f.push(
             row.remark,
             row.enabled

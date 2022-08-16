@@ -24,7 +24,7 @@ export const api = remultExpress({
     initApi: async remult => {
         let found = await remult.repo(Group).findFirst({ system: true })
         if (!found) {
-            await remult.repo(Group).insert({ name: 'כללי', system: true })
+            await remult.repo(Group).insert({ name: 'כל אנשי הקשר', system: true })
         }
     },
 });

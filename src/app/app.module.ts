@@ -28,6 +28,7 @@ import { MobilesComponent } from './core/mobile/mobiles/mobiles.component';
 import { SendComponent } from './core/send/send/send.component';
 import { GroupsComponent } from './core/group/groups/groups.component';
 import { ExcelImportComponent } from './excel/excel-import/excel-import.component';
+import { TodaComponent } from './home/toda/toda.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { ExcelImportComponent } from './excel/excel-import/excel-import.componen
     MobilesComponent,
     SendComponent,
     GroupsComponent,
-    ExcelImportComponent
+    ExcelImportComponent,
+    TodaComponent
   ],
   imports: [
     BrowserModule,

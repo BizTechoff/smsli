@@ -15,7 +15,7 @@ import { Group } from "../group/group";
                     { createIfNotFound: true })
                 if (!gm.group) {
                     gm.group = await remult.repo(Group).findFirst({
-                        name: 'כללי', system: true
+                        name: 'כל אנשי הקשר', system: true
                     })
                     if (!gm.group) {
                         throw 'Group General(system) NOT FOUND'
