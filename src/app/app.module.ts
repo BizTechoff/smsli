@@ -29,6 +29,7 @@ import { SendComponent } from './core/send/send/send.component';
 import { GroupsComponent } from './core/group/groups/groups.component';
 import { ExcelImportComponent } from './excel/excel-import/excel-import.component';
 import { TodaComponent } from './home/toda/toda.component';
+import { SmsTextBuilderComponent } from './core/sms/sms-text-builder/sms-text-builder.component';
 
 @NgModule({
   declarations: [
@@ -64,6 +65,6 @@ import { TodaComponent } from './home/toda/toda.component';
   ],
   providers: [DialogService, AdminGuard],
   bootstrap: [AppComponent],
-  entryComponents: [YesNoQuestionComponent, InputAreaComponent, GroupsComponent]//,GroupsComponent
+  entryComponents: [YesNoQuestionComponent, InputAreaComponent, GroupsComponent, SmsTextBuilderComponent]//,GroupsComponent
 })
 export class AppModule { }

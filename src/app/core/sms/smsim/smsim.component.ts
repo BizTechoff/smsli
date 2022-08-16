@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Fields, getFields, Remult } from 'remult';
+import { FieldRef, Fields, getFields, Remult } from 'remult';
 
 import { openDialog } from '@remult/angular';
 import { DataControl, GridSettings } from '@remult/angular/interfaces';
@@ -52,6 +52,7 @@ export class SmsimComponent implements OnInit {
     numOfColumnsInGrid: 15,
     orderBy: { createDate: "desc" },
     rowsInPage: 25,
+    allowSelection: true,
     columnSettings: row => [
       row.byName,
       row.text,
@@ -110,8 +111,12 @@ export class SmsimComponent implements OnInit {
     // console.log('this.smsim.items.length',this.smsim.items.length)
   }
 
-  async smsTextBuilder() {
-    await openDialog(SmsTextBuilderComponent)
+  async smsTextBuilder(col: FieldRef<Sms, string>): Promise<string> {
+    let output = await openDialog<string, SmsTextBuilderComponent>(SmsTextBuilderComponent,
+      win => win.args = { input: col.value },
+      win => win?.args?.output ?? '')
+    col.value = output
+    return output
   }
 
   async save() {
@@ -127,18 +132,18 @@ export class SmsimComponent implements OnInit {
   }
 
   async upsertUser(id = '') {
-    let u: Sms
+    let s: Sms
     let title = ''
     if (id?.trim().length) {
       title = 'עדכון הודעה'
-      u = await this.remult.repo(Sms).findId(id, { useCache: false })
-      if (!u) {
+      s = await this.remult.repo(Sms).findId(id, { useCache: false })
+      if (!s) {
         throw `Error user id: '${id}'`
       }
     }
     else {
       title = 'הוספת הודעה'
-      u = this.remult.repo(Sms).create()
+      s = this.remult.repo(Sms).create()
       // u.avrech = true
     }
 
@@ -147,28 +152,28 @@ export class SmsimComponent implements OnInit {
         title: title,
         fields: () => [
           [
-            u.$.byName,
-            u.$.type
+            s.$.byName,
+            s.$.type
           ],
           [
-            u.$.date,
-            u.$.time
+            s.$.date,
+            s.$.time
           ],
           {
-            field: u.$.text,
+            field: s.$.text,
             click: async (row, col) => {
-              await this.smsTextBuilder()//col.text
+              await this.smsTextBuilder(s.$.text)//col.text
             }
           },
           [
-            u.$.sunday,
-            u.$.monday,
-            u.$.tuesday
+            s.$.sunday,
+            s.$.monday,
+            s.$.tuesday
           ],
           [
-            u.$.wednesday,
-            u.$.thursday,
-            u.$.friday
+            s.$.wednesday,
+            s.$.thursday,
+            s.$.friday
           ]//,
           // u.$.saturday]
           // u.$.address,
@@ -176,7 +181,7 @@ export class SmsimComponent implements OnInit {
           // u.$.missionDate,
         ],
         ok: async () => {
-          await u.save()
+          await s.save()
         }
       },
       dlg => dlg ? dlg.ok : false)

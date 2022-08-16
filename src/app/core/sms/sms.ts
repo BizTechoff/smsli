@@ -19,7 +19,14 @@ export class Sms extends IdEntity {
     @DataControl<Sms, SmsType>({ width: DEFUALT_STRING_WIDTH })
     @Field(() => SmsType)
     type = SmsType.flash
- 
+
+    @DataControl<Sms, string>({
+        clickIcon: 'edit',
+        hideDataOnInput: true, 
+        allowClick: () => true, 
+        click: () => { }//,
+        // cssClass: 'disabled: true'
+    })
     @Fields.string({
         caption: 'תוכן הודעה',
         validate: [Validators.required.withMessage(terms.requiredField)]
