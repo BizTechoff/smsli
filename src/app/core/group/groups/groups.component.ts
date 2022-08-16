@@ -122,21 +122,13 @@ export class GroupsComponent implements OnInit {
           click: async () => await this.refresh()
         }
       ],
-      rowButtons: [{
-        name: terms.resetPassword,
-        click: async () => {
-
-          // if (await this.dialog.yesNoQuestion(terms.passwordDeleteConfirmOf + " " + this.row.currentRow.name)) {
-          //   await this.smsim.currentRow.resetPassword();
-          //   this.dialog.info(terms.passwordDeletedSuccessful);
-          // };
+      rowButtons: [
+        {
+          name: terms.mobiles,
+          click: async row => {
+            await this.assignMobiles(row.id, row.name)
+          }
         }
-      }, {
-        name: terms.mobiles,
-        click: async row => {
-          await this.assignMobiles(row.id, row.name)
-        }
-      }
       ],
       // confirmDelete: async (h) => {
       //   return await this.dialog.confirmDelete(h.name)

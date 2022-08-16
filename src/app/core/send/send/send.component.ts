@@ -130,6 +130,7 @@ export class SendComponent implements OnInit {
         }
         else {
           sm.status = SendStatus.error
+          sm.sRemark = sent?.message
           await sm.save()
           this.dialog.info('שליחה נכשלה');
         }

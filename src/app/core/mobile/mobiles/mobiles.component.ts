@@ -10,6 +10,9 @@ import { Roles } from '../../../users/roles';
 import { GroupMobile } from '../../group-mobile';
 import { Group } from '../../group/group';
 import { GroupsComponent } from '../../group/groups/groups.component';
+import { SmsMobile } from '../../sms-mobile';
+import { Sms } from '../../sms/sms';
+import { SmsimComponent } from '../../sms/smsim/smsim.component';
 import { Mobile } from '../mobile';
 
 
@@ -25,8 +28,9 @@ export class MobilesComponent implements OnInit {
     selected?: string[],
     multi?: boolean,
     changed?: boolean,
-    gid?: string
-  } = { title: '', selected: [] as string[], multi: false, changed: false, gid: '' }
+    gid?: string,//group
+    sid?: string//sms
+  } = { title: '', selected: [] as string[], multi: false, changed: false, gid: '', sid: '' }
 
   constructor(private dialog: DialogService, public remult: Remult) {
   }
@@ -47,20 +51,21 @@ export class MobilesComponent implements OnInit {
 
   async ngOnInit() {
     if (!this.args) {
-      this.args = { title: '', selected: [] as string[], multi: false, changed: false, gid: '' }
+      this.args = { title: '', selected: [] as string[], multi: false, changed: false, gid: '', sid: '' }
     }
     console.log(11, 'this.args', this.args)
     this.args.selected = this.args.selected ?? [] as string[]
     this.args.multi = this.args.multi ?? false
     this.args.changed = this.args.changed ?? false
     this.args.gid = this.args.gid ?? ''
+    this.args.sid = this.args.sid ?? ''
     this.args.title = this.args.title ?? ''
 
     console.log(22, 'this.args', this.args)
     this.intiGrid()
     console.log(33)
 
-    if (this.args.gid) {
+    if (this.args.gid?.length || this.args.sid?.length) {
       if (this.mobiles?.settings?.allowSelection) {
         console.log(44)
         this.mobiles.selectedChanged = row => {
@@ -90,11 +95,25 @@ export class MobilesComponent implements OnInit {
         console.dir(this.args.selected)
       }
 
-      for await (const gm of this.remult.repo(GroupMobile).query({
-        where: { group: { $id: this.args.gid! } }
-      })) {
-        this.args.selected!.push(gm.mobile.id)
-        this.mobiles.selectedRows.push(gm.mobile)
+      if (this.args.gid?.length) {
+        for await (const gm of this.remult.repo(GroupMobile).query({
+          where: { group: { $id: this.args.gid! } }
+        })) {
+          if (gm.mobile) {
+            this.args.selected!.push(gm.mobile.id)
+            this.mobiles.selectedRows.push(gm.mobile)
+          }
+        }
+      }
+      else if (this.args.sid?.length) {
+        for await (const gm of this.remult.repo(SmsMobile).query({
+          where: { sms: { $id: this.args.sid! } }
+        })) {
+          if (gm.mobile) {
+            this.args.selected!.push(gm.mobile.id)
+            this.mobiles.selectedRows.push(gm.mobile)
+          }
+        }
       }
       console.dir(this.args.selected)
 
@@ -134,25 +153,18 @@ export class MobilesComponent implements OnInit {
           click: async () => await this.refresh()
         }
       ],
-      rowButtons: [{
-        name: terms.resetPassword,
-        click: async () => {
-
-          // if (await this.dialog.yesNoQuestion(terms.passwordDeleteConfirmOf + " " + this.mobiles.currentRow.name)) {
-          //   await this.mobiles.currentRow.resetPassword();
-          //   this.dialog.info(terms.passwordDeletedSuccessful);
-          // };
-        }
-      }, {
-        name: terms.smsim,
-        click: async () => {
-        }
-      }, {
-        name: terms.groups,
-        click: async row => {
-          await this.assignGroups(row.id, row.fullName())
-        }
-      }],
+      rowButtons: [
+        {
+          name: terms.smsim,
+          click: async row => {
+            await this.assignSmsim(row.id, row.fullName())
+          }
+        }, {
+          name: terms.groups,
+          click: async row => {
+            await this.assignGroups(row.id, row.fullName())
+          }
+        }],
       // confirmDelete: async (h) => {
       //   return await this.dialog.confirmDelete(h.name)
       // },
@@ -166,10 +178,18 @@ export class MobilesComponent implements OnInit {
   async save() {
     if (this.args.gid?.trim().length) {
       for (const mid of this.args.selected!) {
-        let gm = this.remult.repo(GroupMobile).create()
-        gm.group = await this.remult.repo(Group).findId(this.args.gid!)
-        gm.mobile = await this.remult.repo(Mobile).findId(mid)
-        await gm.save()
+        if (this.args.gid?.length) {
+          let gm = this.remult.repo(GroupMobile).create()
+          gm.group = await this.remult.repo(Group).findId(this.args.gid!)
+          gm.mobile = await this.remult.repo(Mobile).findId(mid)
+          await gm.save()
+        }
+        else if (this.args.sid?.length) {
+          let gm = this.remult.repo(SmsMobile).create()
+          gm.sms = await this.remult.repo(Sms).findId(this.args.sid!)
+          gm.mobile = await this.remult.repo(Mobile).findId(mid)
+          await gm.save()
+        }
       }
       // this.win?.close()
     }
@@ -214,6 +234,12 @@ export class MobilesComponent implements OnInit {
             gm.mobile = m
             await gm.save()
           }
+          else if (this.args.sid?.length ?? false) {
+            let gm = this.remult.repo(SmsMobile).create()
+            gm.sms = await this.remult.repo(Sms).findId(this.args.sid!)
+            gm.mobile = m
+            await gm.save()
+          }
           else {
             await this.assignGroups(m.id, m.fullName())
             await this.refresh()
@@ -234,6 +260,20 @@ export class MobilesComponent implements OnInit {
     // let title = 'שיוך סלולרי לקבוצות'
     let title = `שיוך ${mname} לקבוצות`
     let changed2 = await openDialog(GroupsComponent,
+      win => win.args = { title: title, mid: mid, multi: true },
+      win => win?.args.changed)
+    if (changed2) {
+      await this.refresh()
+    }
+  }
+
+  async assignSmsim(mid: string, mname = '') {
+    if (!mid?.trim().length ?? false) {
+      throw 'assignSmsim got mobile-id NOT VALID'
+    }
+    // let title = 'שיוך סלולרי לקבוצות'
+    let title = `שיוך ${mname} להודעות`
+    let changed2 = await openDialog(SmsimComponent,
       win => win.args = { title: title, mid: mid, multi: true },
       win => win?.args.changed)
     if (changed2) {

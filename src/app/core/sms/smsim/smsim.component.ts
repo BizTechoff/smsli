@@ -7,7 +7,11 @@ import { DialogService } from '../../../common/dialog';
 import { InputAreaComponent } from '../../../common/input-area/input-area.component';
 import { terms } from '../../../terms';
 import { Roles } from '../../../users/roles';
+import { Mobile } from '../../mobile/mobile';
+import { MobilesComponent } from '../../mobile/mobiles/mobiles.component';
+import { SmsMobile } from '../../sms-mobile';
 import { Sms } from '../sms';
+import { SmsType } from '../smsType';
 
 
 @Component({
@@ -16,6 +20,14 @@ import { Sms } from '../sms';
   styleUrls: ['./smsim.component.scss']
 })
 export class SmsimComponent implements OnInit {
+
+  args: {
+    title?: string,
+    selected?: string[],
+    multi?: boolean,
+    changed?: boolean,
+    mid?: string
+  } = { title: '', selected: [] as string[], multi: false, changed: false, mid: '' }
   constructor(private dialog: DialogService, public remult: Remult) {
   }
   get $() { return getFields(this, this.remult) };
@@ -67,20 +79,13 @@ export class SmsimComponent implements OnInit {
         click: async () => await this.refresh()
       }
     ],
-    rowButtons: [{
-      name: terms.resetPassword,
-      click: async () => {
-
-        // if (await this.dialog.yesNoQuestion(terms.passwordDeleteConfirmOf + " " + this.row.currentRow.name)) {
-        //   await this.smsim.currentRow.resetPassword();
-        //   this.dialog.info(terms.passwordDeletedSuccessful);
-        // };
+    rowButtons: [
+      {
+        name: terms.mobiles,
+        click: async row => {
+          await this.assignMobiles(row.id, row.type)
+        }
       }
-    }, {
-      name: terms.mobiles,
-      click: async () => {
-      }
-    }
     ],
     // confirmDelete: async (h) => {
     //   return await this.dialog.confirmDelete(h.name)
@@ -102,6 +107,18 @@ export class SmsimComponent implements OnInit {
     // console.log('this.smsim.items.length',this.smsim.items.length)
     await this.smsim.reloadData()
     // console.log('this.smsim.items.length',this.smsim.items.length)
+  }
+
+  async save() {
+    if (this.args.mid?.trim().length) {
+      for (const gid of this.args.selected!) {
+        let gm = this.remult.repo(SmsMobile).create()
+        gm.sms = await this.remult.repo(Sms).findId(gid)
+        gm.mobile = await this.remult.repo(Mobile).findId(this.args.mid!)
+        await gm.save()
+      }
+      // this.win?.close()
+    }
   }
 
   async upsertUser(id = '') {
@@ -157,6 +174,24 @@ export class SmsimComponent implements OnInit {
       // await u.save()
       await this.refresh()
     }
+  }
+
+  async assignMobiles(sid: string, type: SmsType) {
+    if (!sid?.trim().length ?? false) {
+      throw 'assignMobiles got group-id NOT VALID'
+    }
+    // let title = 'שיוך סלולרי לקבוצות'
+    let title = `שיוך ${'הודעה'} לסלולרים`
+    let changed2 = await openDialog(MobilesComponent,
+      win => win.args = { title: title, sid: sid, multi: true },
+      win => win?.args.changed)
+    if (changed2) {
+      await this.refresh()
+    }
+  }
+
+  async close() {
+
   }
 
 }
