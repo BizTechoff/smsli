@@ -3,7 +3,7 @@ import { Mobile } from "./mobile/mobile";
 import { SendStatus } from "./sendStatus";
 import { Sms } from "./sms/sms";
 
-@Entity('messages', (options, remult) => {
+@Entity<SmsMobile>('messages', (options, remult) => {
     options.caption = 'מסרים'
     options.allowApiCrud = Allow.authenticated
 })

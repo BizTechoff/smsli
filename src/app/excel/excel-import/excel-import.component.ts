@@ -15,7 +15,7 @@ import { ExcelImportController } from '../excelImportController';
     </div>
     <!-- <input type="file" (input)="onFileInput($event)" /> -->
     <!-- <br> -->
-    <a href="/assets/smslo.schema.mobiles.xlsx">אקסל לדוגמה</a>
+    <a style="margin: 10px;" href="/assets/smslo.schema.mobiles.xlsx">אקסל לדוגמה</a>
   </div>
   `,
   styles: []
@@ -48,7 +48,7 @@ export class ExcelImportComponent {
           console.log('dataArray', dataArray?.length, JSON.stringify(dataArray))
           let processed = await ExcelImportController.importMobilesFromExcel(dataArray);
           alert("loaded " + processed + " mobiles");
-        };
+        }; 
         fileReader.readAsArrayBuffer(f);
       });
       return;//to import the first file only

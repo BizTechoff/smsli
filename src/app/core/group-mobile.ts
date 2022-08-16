@@ -2,7 +2,7 @@ import { Allow, Entity, Field, IdEntity } from "remult";
 import { Group } from "./group/group";
 import { Mobile } from "./mobile/mobile";
 
-@Entity('groupMobiles', (options, remult) => {
+@Entity<GroupMobile>('groupMobiles', (options, remult) => {
     options.caption = 'קבוצה-סלולרי'
     options.allowApiCrud = Allow.authenticated
 })

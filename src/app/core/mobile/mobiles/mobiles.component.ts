@@ -116,8 +116,9 @@ export class MobilesComponent implements OnInit {
             where: { mobile: { $id: m.id } }
           })
           if (groups) {
+            let title = 'שיוך סלולרי לקבוצות'
             let changed2 = await openDialog(GroupsComponent,
-              win => win.args = { mid: m.id, multi: true },
+              win => win.args = {title:title, mid: m.id, multi: true },
               win => win?.args.changed)
             if (changed2) {
               await this.refresh()

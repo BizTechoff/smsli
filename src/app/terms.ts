@@ -1,7 +1,7 @@
 export const terms = {
     
-    appVersion: '2022.08.16.2',
-    home: 'סמס לי - שליחת מסרים לסלולרי',
+    appVersion: '2022.08.16.3',
+    home: 'סמס לו - שליחת מסרים לסלולרי',
     UserRoleNOTSET:'חובה סוג הרשאה',
     appName: 'מנהיגות תורנית',
     name: 'שם',

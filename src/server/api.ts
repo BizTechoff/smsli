@@ -20,5 +20,11 @@ export const api = remultExpress({
         // if (process.env['NODE_ENV'] === "production")
         return createPostgresConnection({ configuration: "heroku", sslInDev: process.env['DEV_MODE'] === 'PROD' })
         // return undefined;
-    }
+    },
+    initApi: async remult => {
+        let found = await remult.repo(Group).findFirst({ system: true })
+        if (!found) {
+            await remult.repo(Group).insert({ name: 'כללי', system: true })
+        }
+    },
 });

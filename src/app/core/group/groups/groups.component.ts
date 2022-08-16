@@ -16,15 +16,14 @@ import { Group } from '../group';
   styleUrls: ['./groups.component.scss']
 })
 export class GroupsComponent implements OnInit {
-  // @Inject(MAT_DIALOG_DATA) public win: any
-
 
   args: {
+    title?: string,
     selected?: string[],
     multi?: boolean,
     changed?: boolean,
     mid?: string
-  } = { selected: [] as string[], multi: false, changed: false, mid: '' }
+  } = { title: '', selected: [] as string[], multi: false, changed: false, mid: '' }
   constructor(private dialog: DialogService, private remult: Remult) {
   }
   get $() { return getFields(this, this.remult) };
@@ -44,15 +43,16 @@ export class GroupsComponent implements OnInit {
 
   async ngOnInit() {
     if (!this.args) {
-      this.args = { selected: [] as string[], multi: false, changed: false, mid: '' }
+      this.args = { title: '', selected: [] as string[], multi: false, changed: false, mid: '' }
     }
-    console.log(11,'this.args',this.args)
+    console.log(11, 'this.args', this.args)
     this.args.selected = this.args.selected ?? [] as string[]
     this.args.multi = this.args.multi ?? false
     this.args.changed = this.args.changed ?? false
     this.args.mid = this.args.mid ?? ''
+    this.args.title = this.args.title ?? ''
 
-    console.log(22,'this.args',this.args)
+    console.log(22, 'this.args', this.args)
     this.intiGrid()
     console.log(33)
 
@@ -95,7 +95,7 @@ export class GroupsComponent implements OnInit {
     }
   }
 
-  intiGrid(){
+  intiGrid() {
     // this.smsim = new GridSettings(this.remult.repo(Group))
     this.smsim = new GridSettings(this.remult.repo(Group), {
       allowCrud: false,
@@ -185,6 +185,10 @@ export class GroupsComponent implements OnInit {
       this.args.changed = true
       await this.refresh()
     }
+  }
+
+  async close() {
+
   }
 
 }

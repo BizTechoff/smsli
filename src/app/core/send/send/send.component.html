@@ -3,7 +3,7 @@
   </div>
   <div style="display: flex; flex-direction: row; justify-content: space-between; height: 100%; width: 100%;">
     <div style="display: flex; flex-direction: column; justify-content: space-between; height: 100%; width: 100%;">
-      <app-excel-import></app-excel-import>
+      <app-excel-import style="width: 100%;"></app-excel-import>
       <!-- <button color="accent" mat-raised-button (click)="this.addMobilesFromExcel()">
         <mat-label>הוסף אקסל</mat-label>
         <mat-icon>receipt_long</mat-icon>
@@ -15,8 +15,8 @@
     </div>
     <div style="display: flex; flex-direction: column; justify-content: space-between; height: 100%; width: 100%;">
       <div style="display: flex; flex-direction: row; justify-content: space-between; height: 100%; width: 100%;">
-        <data-control [field]="this.sms.$.date"></data-control>
-        <data-control [field]="this.sms.$.time"></data-control>
+        <data-control style="width: 100%;" [field]="this.sms.$.date"></data-control>
+        <data-control style="width: 100%;" [field]="this.sms.$.time"></data-control>
       </div> 
       <div style="display: flex; flex-direction: row; justify-content: space-between; height: 100%; width: 100%;">
         <data-control style="width: 100%;" [field]="this.sms.$.byName"></data-control>

@@ -34,8 +34,8 @@ export class Sms extends IdEntity {
     @Fields.dateOnly({ caption: 'תאריך' })
     date!: Date
 
-    @DataControl<Sms, string>({ inputType: 'time', width: DEFUALT_TIME_WIDTH })
-    @Fields.string({ caption: 'שעה' })
+    @DataControl<Sms, string>({ width: DEFUALT_TIME_WIDTH })
+    @Fields.string({ caption: 'שעה', inputType: 'time' })
     time!: string
 
     @DataControl<Sms, boolean>({ width: DEFUALT_DAY_WIDTH })

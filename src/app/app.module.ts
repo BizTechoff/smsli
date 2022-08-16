@@ -62,8 +62,8 @@ import { ExcelImportComponent } from './excel/excel-import/excel-import.componen
     MatMenuModule,
     RemultModule
   ],
-  providers: [DialogService, AdminGuard],
+  providers: [DialogService, AdminGuard, GroupsComponent],
   bootstrap: [AppComponent],
-  entryComponents: [YesNoQuestionComponent, InputAreaComponent]
+  entryComponents: [YesNoQuestionComponent, InputAreaComponent]//,GroupsComponent
 })
 export class AppModule { }
