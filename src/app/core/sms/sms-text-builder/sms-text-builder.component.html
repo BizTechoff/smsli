@@ -1,1 +1,12 @@
-<p>sms-text-builder works!</p>
+<span>caretPos: {{ caretPos }} </span>
+<div style="display: flex; flex-direction: column; justify-content: space-between;">
+    <div style="display: flex; flex-direction: row; justify-content: space-between;">
+        <button mat-raised-button color="accent" (click)="addTag('!name!')">
+            {{ 'שם+' }}
+          </button>
+    </div>
+    <div style="display: flex; flex-direction: row; justify-content: space-between;">
+        <textarea #textArea rows="10"></textarea>
+    </div>
+    <!-- (click)="getCaretPos(textArea)" -->
+</div>

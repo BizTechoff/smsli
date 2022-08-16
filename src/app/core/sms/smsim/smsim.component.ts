@@ -11,6 +11,7 @@ import { Mobile } from '../../mobile/mobile';
 import { MobilesComponent } from '../../mobile/mobiles/mobiles.component';
 import { SmsMobile } from '../../sms-mobile';
 import { Sms } from '../sms';
+import { SmsTextBuilderComponent } from '../sms-text-builder/sms-text-builder.component';
 import { SmsType } from '../smsType';
 
 
@@ -109,6 +110,10 @@ export class SmsimComponent implements OnInit {
     // console.log('this.smsim.items.length',this.smsim.items.length)
   }
 
+  async smsTextBuilder() {
+    await openDialog(SmsTextBuilderComponent)
+  }
+
   async save() {
     if (this.args.mid?.trim().length) {
       for (const gid of this.args.selected!) {
@@ -149,7 +154,12 @@ export class SmsimComponent implements OnInit {
             u.$.date,
             u.$.time
           ],
-          u.$.text,
+          {
+            field: u.$.text,
+            click: async (row, col) => {
+              await this.smsTextBuilder()//col.text
+            }
+          },
           [
             u.$.sunday,
             u.$.monday,
