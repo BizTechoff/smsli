@@ -13,14 +13,16 @@ export class SmsTextBuilderComponent implements OnInit {
   text = ''
   args: {
     input: string,
-    output?: string
-  } = { input: '', output: '' }
+    output?: string//,
+    // saved?: boolean
+  } = { input: '', output: '' }//, saved: false }
   constructor(private win: MatDialogRef<any>) { }
 
   ngOnInit(): void {
-    this.args = this.args ?? { input: '', output: '' }
+    this.args = this.args ?? { input: '', output: '', saved: false }
     this.args.input = this.args.input ?? ''
     this.args.output = this.args.output ?? ''
+    // this.args.saved = this.args.saved ?? false
 
     this.args.output = this.args.input
     // const textArea = this._textArea.nativeElement as HTMLTextAreaElement;
@@ -59,6 +61,11 @@ export class SmsTextBuilderComponent implements OnInit {
   save() {
     const textArea = this._textArea.nativeElement as HTMLTextAreaElement;
     this.args.output = textArea.value ?? ''
+    // this.args.saved = true
+    this.close()
+  }
+
+  close() {
     this.win?.close()
   }
 

@@ -52,7 +52,7 @@ export class SmsimComponent implements OnInit {
     numOfColumnsInGrid: 15,
     orderBy: { createDate: "desc" },
     rowsInPage: 25,
-    allowSelection: true,
+    allowSelection: this.args.multi,
     columnSettings: row => [
       row.byName,
       row.text,
@@ -96,6 +96,16 @@ export class SmsimComponent implements OnInit {
 
   loaded = false
   async ngOnInit() {
+    if (!this.args) {
+      this.args = { title: '', selected: [] as string[], multi: false, changed: false, mid: '' }
+    }
+    this.args.selected = this.args.selected ?? [] as string[]
+    this.args.multi = this.args.multi ?? false
+    this.args.changed = this.args.changed ?? false
+    this.args.mid = this.args.mid ?? ''
+    this.args.title = this.args.title ?? ''
+    console.log(22, 'SmsimComponent.args', this.args)
+
     // console.log('this.smsim.items.length',this.smsim.items.length)
     await this.smsim.reloadData()
     // console.log('this.smsim.items.length',this.smsim.items.length)
@@ -115,6 +125,7 @@ export class SmsimComponent implements OnInit {
     let output = await openDialog<string, SmsTextBuilderComponent>(SmsTextBuilderComponent,
       win => win.args = { input: col.value },
       win => win?.args?.output ?? '')
+    // if (win?.args?.saved)
     col.value = output
     return output
   }
@@ -152,12 +163,12 @@ export class SmsimComponent implements OnInit {
         title: title,
         fields: () => [
           [
-            s.$.byName,
-            s.$.type
+            { field: s.$.byName, width: '100%' },
+            { field: s.$.type, width: '100%' }
           ],
           [
-            s.$.date,
-            s.$.time
+            { field: s.$.date, width: '100%' },
+            { field: s.$.time, width: '100%' }
           ],
           {
             field: s.$.text,

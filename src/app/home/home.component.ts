@@ -5,6 +5,7 @@ import { DialogService } from '../common/dialog';
 import { Mobile } from '../core/mobile/mobile';
 import { Sms } from '../core/sms/sms';
 import { SignInController } from '../users/SignInController';
+import { User } from '../users/user';
 
 @Component({
   selector: 'app-home',
@@ -16,9 +17,10 @@ export class HomeComponent implements OnInit {
   sign = new SignInController(this.remult);
   sms = this.remult.repo(Sms).create()
   mobiles = [] as Mobile[]
+  userName = ''
 
   constructor(
-    private remult: Remult,
+    public remult: Remult,
     private dialog: DialogService,
     public auth: AuthService) { }
 
@@ -32,7 +34,10 @@ export class HomeComponent implements OnInit {
   async signIn() {
     // alert('Hi')
     this.auth.setAuthToken(await this.sign.signIn(), this.sign.rememberOnThisDevice);
-    
+    let u = await this.remult.repo(User).findId(this.remult.user.id)
+    if (u) {
+      this.userName = u.name
+    }
   }
 
   async addMobilesFromExcel() {

@@ -1,13 +1,18 @@
 <div class="home-grow-item">
 
   <div style="scale: 1.5;">
-    <data-control [field]="this.sign.$.user"></data-control>
-    <data-control [field]="this.sign.$.password"></data-control>
-    <button mat-raised-button color="primary" style="width: 100%; margin-top: 5px;" (click)="this.signIn()">
-      <mat-label>כניסה</mat-label>
-      <mat-icon style="transform: rotate(180deg); margin-right: 20px;">login</mat-icon>
-    </button>
-    
+    <div *ngIf="!this.remult.authenticated()">
+      <data-control [field]=" this.sign.$.user">
+      </data-control>
+      <data-control [field]="this.sign.$.password"></data-control>
+      <button mat-raised-button color="primary" style="width: 100%; margin-top: 5px;" (click)="this.signIn()">
+        <mat-label>כניסה</mat-label>
+        <mat-icon style="transform: rotate(180deg); margin-right: 20px;">login</mat-icon>
+      </button>
+    </div>
+    <div *ngIf="this.remult.authenticated()">
+      <h1>שלום {{ this.userName }} </h1>
+    </div>
   </div>
   <!-- <h1>לכניסה יש ללחוץ על כפתור "כניסה" מצד שמאל למעלה</h1>
   <mat-icon>north_west</mat-icon> -->

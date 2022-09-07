@@ -14,6 +14,7 @@ import { SmsimComponent } from './core/sms/smsim/smsim.component';
 import { TodaComponent } from './home/toda/toda.component';
 import { terms } from './terms';
 import { AdminGuard } from "./users/AdminGuard";
+import { UsersComponent } from './users/users.component';
 
 const defaultRoute = 'login'
 //  terms.home;
@@ -23,7 +24,8 @@ const routes: Routes = [
   { path: terms.smsim, component: SmsimComponent, canActivate: [AdminGuard] },
   { path: terms.groups, component: GroupsComponent, canActivate: [AdminGuard] },
   { path: terms.mobiles, component: MobilesComponent, canActivate: [AdminGuard] },
-  { path: terms.toda, component: TodaComponent },//canActivate: [AdminGuard] },
+  { path: terms.users, component: UsersComponent, canActivate: [AdminGuard] },
+  // { path: terms.toda, component: TodaComponent },//canActivate: [AdminGuard] },
   { path: '**', redirectTo: '/' + defaultRoute, pathMatch: 'full' }
 
 ];

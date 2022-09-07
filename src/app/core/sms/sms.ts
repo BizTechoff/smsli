@@ -18,7 +18,7 @@ export class Sms extends IdEntity {
 
     @DataControl<Sms, SmsType>({ width: DEFUALT_STRING_WIDTH })
     @Field(() => SmsType)
-    type = SmsType.flash
+    type = SmsType.sms
 
     @DataControl<Sms, string>({
         clickIcon: 'edit',
